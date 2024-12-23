@@ -225,9 +225,7 @@ st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
 st.sidebar.markdown(
     """
-    <a href="https://www.linkedin.com/in/hannah-wasson/" target="_blank">
-        <img src="linkedin.png" alt="Connect with me on LinkedIn" style="width:150px;">
-    </a>
+    ![Connect with me on LinkedIn](/Users/hannahwasson/Documents/reviews-project/linkedin.png "Linkedin")
     """,
     unsafe_allow_html=True
 )
