@@ -1,6 +1,6 @@
+import pandas as pd
 import nltk
 import nltk.stem.porter
-import pandas as pd
 import numpy as np
 from pandasql import sqldf
 import geopandas as gpd
@@ -32,6 +32,7 @@ from wordcloud import WordCloud
 from wordcloud import STOPWORDS
 import pydeck as pdk
 nltk.download( 'stopwords' )
+nltk.download('punkt')
 
 
 # importing data from google sheets
