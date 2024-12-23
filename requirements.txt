@@ -1,0 +1,25 @@
+pandas 
+nltk
+nltk.stem.porter
+numpy 
+pandasql 
+geopandas
+shapely.geometry 
+matplotlib.pyplot 
+plotly.graph_objects 
+plotly.express
+pandas
+numpy 
+re
+spacy
+collections
+re
+string
+re
+sklearn
+streamlit
+transformers
+wordcloudgi
+pydeck
+nltk.download( 'stopwords' )
+nltk.download('punkt')
