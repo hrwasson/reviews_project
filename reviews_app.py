@@ -1,6 +1,6 @@
 import pandas as pd
-import nltk
-import nltk.stem.porter
+#import nltk
+#import nltk.stem.porter
 import numpy as np
 from pandasql import sqldf
 import geopandas as gpd
