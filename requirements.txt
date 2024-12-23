@@ -3,7 +3,7 @@ nltk==3.9.1
 shapely
 matplotlib
 plotly
-sklearn
+scikit-learn
 streamlit==1.41.1
 transformers
 wordcloud
