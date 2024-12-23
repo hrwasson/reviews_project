@@ -223,7 +223,7 @@ markdown = '''
 st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
-st.markdown(
+st.sidebar.markdown(
     """
     <a href="https://www.linkedin.com/in/hannah-wasson/" target="_blank">
         <img src="linkedin.png" alt="Connect with me on LinkedIn" style="width:150px;">
