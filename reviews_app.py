@@ -363,7 +363,7 @@ elif page == "Data at a Glance":
             hover_name='Name',
             color='Rating',  # Use the Rating column for color mapping
             color_continuous_scale='Purpor',
-            mapbox_style='carto-darkmatter',
+            mapbox_style='carto-positron',
             title='Reviewed Locations:',
             width=1000,
             height=500,
@@ -385,7 +385,7 @@ elif page == "Data at a Glance":
             hover_name='Name',
             color='Rating',  # Use the Rating column for color mapping
             color_continuous_scale='Purpor',
-            mapbox_style='carto-darkmatter',
+            mapbox_style='carto-positron',
             title='Reviewed Locations:',
             width=1000,
             height=500, 
@@ -557,7 +557,7 @@ elif page == "Recommendations":
                 hover_name='Name',
                 color='Rating',  # Use the Rating column for color mapping
                 color_continuous_scale='Purpor',
-                mapbox_style='carto-darkmatter',
+                mapbox_style='carto-positron',
                 title=f'{name}:',
                 width=1000,
                 height=500, 
@@ -611,7 +611,7 @@ elif page == "Recommendations":
                     hover_name='Name',
                     color='Rating',  # Use the Rating column for color mapping
                     color_continuous_scale='Purpor',
-                    mapbox_style='carto-darkmatter',
+                    mapbox_style='carto-positron',
                     title='Other Reviewed Locations',
                     width=1000,
                     height=500, 
@@ -685,7 +685,7 @@ elif page == "Recommendations":
                     hover_name='Name',
                     color='Rating',  # Use the Rating column for color mapping
                     color_continuous_scale='Purpor',
-                    mapbox_style='carto-darkmatter',
+                    mapbox_style='carto-positron',
                     title='Other Reviewed Locations',
                     width=1000,
                     height=500, 
