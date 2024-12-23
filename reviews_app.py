@@ -223,9 +223,7 @@ st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
 markdown2 = '''
-<div style="color:black; padding:15px; border-radius:10px;">
     [![Connect with me on LinkedIn](<linkedin.png>)](<https://www.linkedin.com/in/hannah-wasson/>)
-    </div>
 '''
 
 st.sidebar.markdown(markdown2)
@@ -283,7 +281,8 @@ if page == "Home":
 
         st.plotly_chart(reccomendation_map)
     
-    col3, col4 = st.columns()
+    col3, col4 = st.columns(2)
+
     with col3: 
         data = pd.DataFrame(dict(
         r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
@@ -292,7 +291,7 @@ if page == "Home":
         fig.update_traces(fill='toself')
         fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
         st.plotly_chart(fig, on_select=callable)
-        
+
     with col4: 
         st.image("coffee.JPG")
 
