@@ -1,3 +1,4 @@
+import nltk
 import nltk.stem.porter
 import pandas as pd
 import numpy as np
@@ -10,7 +11,6 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 import re
-import nltk
 import spacy
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sentiment_module import sentiment_term, sentiment
@@ -44,7 +44,6 @@ df['Count of Reviews'] = 1
 df['Overall Review'] = df['Positive Review'] + " " + df['Negative Review']
 
 # getting the colors for the ratings 
-# TODO:Reformat this
  
 def get_color(rating):
     if rating == 1: return '#efbbff'
