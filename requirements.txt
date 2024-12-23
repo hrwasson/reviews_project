@@ -7,3 +7,4 @@ scikit-learn
 streamlit==1.41.1
 transformers
 wordcloud
+tensorflow
