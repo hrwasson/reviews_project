@@ -1,9 +1,9 @@
 import pandas as pd
-#import nltk
+import nltk
 #import nltk.stem.porter
 import numpy as np
-from pandasql import sqldf
-import geopandas as gpd
+#from pandasql import sqldf
+#import geopandas as gpd
 from shapely.geometry import Point
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
@@ -21,13 +21,13 @@ import string
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import ipywidgets as widgets
-from IPython.display import display
+#import ipywidgets as widgets
+#from IPython.display import display
 import streamlit as st
 from haversine import haversine, Unit
-import networkx as nx
-import geopy.distance
-from transformers import pipeline
+#import networkx as nx
+#import geopy.distance
+#from transformers import pipeline
 from wordcloud import WordCloud
 from wordcloud import STOPWORDS
 import pydeck as pdk
