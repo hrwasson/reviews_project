@@ -1,36 +1,18 @@
 import pandas as pd
 import nltk
-#import nltk.stem.porter
-import numpy as np
-#from pandasql import sqldf
-#import geopandas as gpd
-from shapely.geometry import Point
+import nltk.stem.porter
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-import numpy as np
-import re
-import spacy
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sentiment_module import sentiment_term, sentiment
-import collections
-import nltk
-import re
-import string
-import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-#import ipywidgets as widgets
-#from IPython.display import display
 import streamlit as st
-from haversine import haversine, Unit
-#import networkx as nx
-#import geopy.distance
-#from transformers import pipeline
+from transformers import pipeline
 from wordcloud import WordCloud
 from wordcloud import STOPWORDS
-import pydeck as pdk
 nltk.download( 'stopwords' )
 nltk.download('punkt')
 
