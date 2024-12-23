@@ -120,8 +120,8 @@ def word_cloud_other(data, output_path = "word_cloud.png"):
     plt.savefig(output_path, dpi=150, bbox_inches="tight")
     return output_path
 
-def get_walking_distance(location1, location2): 
-    return haversine(location1, location2, unit=Unit.MILES)
+#def get_walking_distance(location1, location2): 
+    #return haversine(location1, location2, unit=Unit.MILES)
 
 df['size'] = df['Rating'].apply(get_size)
 df['Rating'] = df['Rating'].to_list()
@@ -222,6 +222,14 @@ markdown = '''
 st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
+markdown2 = '''
+<div style="color:black; padding:15px; border-radius:10px;">
+    [![Connect with me on LinkedIn](<linkedin.png>)](<https://www.linkedin.com/in/hannah-wasson/>)
+    </div>
+'''
+
+st.sidebar.markdown(markdown2)
+
 if page == "Home":
 
     col1, col2 = st.columns(2)
@@ -275,14 +283,18 @@ if page == "Home":
 
         st.plotly_chart(reccomendation_map)
     
-    
-    data = pd.DataFrame(dict(
-    r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
-    theta=['Atmosphere','Food Quality','Service', 'Unique Aspects']))
-    fig = px.line_polar(data, r='r', theta='theta', line_close=True, color_discrete_sequence=['black'])
-    fig.update_traces(fill='toself')
-    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
-    st.plotly_chart(fig, on_select=callable)
+    col3, col4 = st.columns()
+    with col3: 
+        data = pd.DataFrame(dict(
+        r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
+        theta=['Atmosphere','Food Quality','Service', 'Unique Aspects']))
+        fig = px.line_polar(data, r='r', theta='theta', line_close=True, color_discrete_sequence=['black'])
+        fig.update_traces(fill='toself')
+        fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
+        st.plotly_chart(fig, on_select=callable)
+        
+    with col4: 
+        st.image("coffee.JPG")
 
 elif page == "How did I collect the data?":
     st.header("How did I collect the data?")
@@ -366,7 +378,7 @@ elif page == "Data at a Glance":
             mapbox_style='carto-positron',
             title='Reviewed Locations:',
             width=1000,
-            height=500,
+            height=700,
             zoom=5
         )
 
@@ -388,7 +400,7 @@ elif page == "Data at a Glance":
             mapbox_style='carto-positron',
             title='Reviewed Locations:',
             width=1000,
-            height=500, 
+            height=700, 
             zoom = 5
         )
         full_map.update_traces(
