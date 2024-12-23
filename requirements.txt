@@ -1,12 +1,10 @@
 pandas==2.2.2
 nltk==3.9.1
-nltk.stem.porter
 numpy 
 geopandas
-shapely.geometry 
-matplotlib.pyplot 
-plotly.graph_objects 
-plotly.express
+shapely
+matplotlib
+plotly
 re
 spacy
 collections
