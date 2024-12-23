@@ -223,15 +223,14 @@ markdown = '''
 st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
-markdown2 = '''
-<div style="background-color:black; color:white; padding:15px; border-radius:10px;">
-
-    [![Connect with me on LinkedIn](<linkedin.png>)](<https://www.linkedin.com/in/hannah-wasson/>)
-
-</div>
-'''
-
-st.sidebar.markdown(markdown2, unsafe_allow_html=True)
+st.markdown(
+    """
+    <a href="https://www.linkedin.com/in/hannah-wasson/" target="_blank">
+        <img src="linkedin.png" alt="Connect with me on LinkedIn" style="width:150px;">
+    </a>
+    """,
+    unsafe_allow_html=True
+)
 
 if page == "Home":
 
