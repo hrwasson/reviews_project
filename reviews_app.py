@@ -208,6 +208,7 @@ import streamlit as st
 
 # About Me content with HTML for styling
 markdown = '''
+
 <div style="background-color:black; color:white; padding:15px; border-radius:10px;">
     <b>Hey there!</b> My name is <b>Hannah Wasson</b>, and I am a 2025 M.S. Candidate in Analytics at the 
     <b>Institute for Advanced Analytics, NC State University</b>. Since moving to Raleigh, NC, I’ve made it my 
@@ -224,7 +225,9 @@ st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
 markdown2 = '''
 <div style="background-color:black; color:white; padding:15px; border-radius:10px;">
-    [![Connect with me on LinkedIn](<"linkedin.png">)](<https://www.linkedin.com/in/hannah-wasson/>)
+
+    [![Connect with me on LinkedIn](<linkedin.png>)](<https://www.linkedin.com/in/hannah-wasson/>)
+
 </div>
 '''
 
@@ -283,19 +286,14 @@ if page == "Home":
 
         st.plotly_chart(reccomendation_map)
     
-    col3, col4 = st.columns(2)
+    data = pd.DataFrame(dict(
+    r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
+    theta=['Atmosphere','Food Quality','Service', 'Unique Aspects']))
+    fig = px.line_polar(data, r='r', theta='theta', line_close=True, color_discrete_sequence=['black'])
+    fig.update_traces(fill='toself')
+    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
+    st.plotly_chart(fig, on_select=callable)
 
-    with col3: 
-        data = pd.DataFrame(dict(
-        r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
-        theta=['Atmosphere','Food Quality','Service', 'Unique Aspects']))
-        fig = px.line_polar(data, r='r', theta='theta', line_close=True, color_discrete_sequence=['black'])
-        fig.update_traces(fill='toself')
-        fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
-        st.plotly_chart(fig, on_select=callable)
-
-    with col4: 
-        st.image("coffee.JPG")
 
 elif page == "How did I collect the data?":
     st.header("How did I collect the data?")
