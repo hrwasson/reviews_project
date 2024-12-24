@@ -711,9 +711,10 @@ elif page == "My Recommendations":
         st.write("No locations match your selected amenities. Please try a different option.")
 
 elif page == "Your Recommendations": 
+    st.write("your reccomendations")
 
 elif page == "Give me feedback": 
-
+    st.write("feedback")
 
 
 
