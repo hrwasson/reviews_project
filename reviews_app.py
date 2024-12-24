@@ -187,7 +187,7 @@ st.title("Eats & Adventures Tracker")
 # Sidebar navigation
 
 st.markdown('''
-            <div style="background-color:#ebdfff; color:black">
+            <div style="background-color:white; color:black">
             ''', unsafe_allow_html=True)
 
 page = st.sidebar.selectbox(
@@ -209,7 +209,7 @@ import streamlit as st
 # About Me content with HTML for styling
 markdown = '''
 
-<div style="background-color:black; color:white; padding:15px; border-radius:10px;">
+<div style="background-color:white; color:black; padding:15px; border-radius:10px;">
     <b>Hey there!</b> My name is <b>Hannah Wasson</b>, and I am a 2025 M.S. Candidate in Analytics at the 
     <b>Institute for Advanced Analytics, NC State University</b>. Since moving to Raleigh, NC, I’ve made it my 
     mission to track all the places I’ve visited to share them with my friends and family who live far away. 
@@ -223,12 +223,8 @@ markdown = '''
 st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
-st.sidebar.markdown(
-    """
-    ![Connect with me on LinkedIn](/Users/hannahwasson/Documents/reviews-project/linkedin.png "Linkedin")
-    """,
-    unsafe_allow_html=True
-)
+
+#st.sidebar.markdown("[![Connect with me on LinkedIn](/static/linkedin.png)](https://www.linkedin.com/in/hannah-wasson/)")
 
 if page == "Home":
 
@@ -306,6 +302,7 @@ elif page == "How did I collect the data?":
         - Ratings and Reviews: Overall Rating, Atmosphere, Food Quality, Service, Unique Aspects, Positive Review, Negative Review, and whether I would return to the place.
         - Amenities: WiFi Availability, and Charging Outlets
         - Cost: Price (e.g. $, $$, $$$, $$$$)    
+
         """
     )
 
@@ -319,8 +316,8 @@ elif page == "Data at a Glance":
     st.markdown("""
     <style>
     span[data-baseweb="tag"] {
-    color: white;
-    background-color: black
+    color: black;
+    background-color: white
     }
     <style>
     """, unsafe_allow_html=True)
