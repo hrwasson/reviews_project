@@ -192,7 +192,7 @@ st.markdown('''
 
 page = st.sidebar.selectbox(
     "Navigation",
-    ["Home", "How did I collect the data?", "Data at a Glance", "Recommendations"], 
+    ["Home", "How did I collect the data?", "Data at a Glance", "My Recommendations", "Your Reccomendations", "Give me feedback"], 
     index=0, 
     placeholder= "Where would you like to navigate to?"
 )
@@ -451,7 +451,7 @@ elif page == "Data at a Glance":
    )
     st.plotly_chart(pie_chart)
 
-elif page == "Recommendations": 
+elif page == "My Recommendations": 
     st.header("Recommendation Engine")
 
     df['Region'] = None
@@ -710,7 +710,9 @@ elif page == "Recommendations":
     else:
         st.write("No locations match your selected amenities. Please try a different option.")
 
-        
+elif page == "Your Recommendations": 
+
+elif page == "Give me feedback": 
 
 
 
