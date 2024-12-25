@@ -1,13 +1,8 @@
 secrets.toml
-coffee.JPG
-datacollection.png
-googleform.png
-hannah.jpg
+*.jpg
+*.png
 review_model.py
 review_project.ipynb
 reviews_project.py
 reviews_sentiment.py
 test.py
-title copy.png
-title.png
-word_cloud.png
