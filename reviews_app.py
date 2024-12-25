@@ -18,12 +18,14 @@ from wordcloud import STOPWORDS
 nltk.download( 'stopwords' )
 nltk.download('punkt')
 import datetime
+import toml
 
 st.set_page_config(layout="wide")
 
 # importing data from google sheets
-sheet_id = st.secrets["google_sheets"]["my_reviews"]
 
+secrets = toml.load(".streamlit/secrets.toml")
+sheet_id = secrets['google_sheets']['my_reviews']
 df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
 df.rename(columns={'Latitude': 'lat'}, inplace=True)
 df.rename(columns={'Longitude': 'lon'}, inplace=True)
