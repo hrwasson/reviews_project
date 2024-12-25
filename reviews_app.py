@@ -23,11 +23,8 @@ import toml
 st.set_page_config(layout="wide")
 
 # Access the sheet_id
-try:
-    sheet_id = st.secrets['google_sheets']['my_reviews']
-    print(f"Sheet ID: {sheet_id}")
-except KeyError as e:
-    st.error("Key error")
+sheet_id = st.secrets['google_sheets']['my_reviews']
+print(f"Sheet ID: {sheet_id}")
 
 df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
 df.rename(columns={'Latitude': 'lat'}, inplace=True)
