@@ -728,11 +728,11 @@ elif page == "Contribute Reviews":
             placeholder="Please select an option..."
         )
 
-        valid_input = [name.strip(), address.strip(), category.strip(), season.strip(), 
+        valid_input = all([name.strip(), address.strip(), category.strip(), season.strip(), 
                        order.strip(), p.strip(), r.strip(), p.strip(), a.strip(), f.strip(),
                          s.strip(),u.strip(), positive_review.strip(),negative_review.strip(),
                          would_go_back.strip(),parking_ease.strip(),parkingtype1.strip(),
-                           parkingtype2.strip(),wifi_select.strip(), charging_select.strip()]
+                           parkingtype2.strip(),wifi_select.strip(), charging_select.strip()])
         
         submit_button = st.form_submit_button('Submit', disabled=not valid_input, type='primary')
 
