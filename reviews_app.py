@@ -22,11 +22,12 @@ import datetime
 st.set_page_config(layout="wide")
 
 # Access the sheet_id
-sheet_id = st.secrets['my_reviews']
+sheet_id = st.secrets["sheets"]["url"]
 
 print(f"Sheet ID: {sheet_id}")
 
 df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
+
 df.rename(columns={'Latitude': 'lat'}, inplace=True)
 df.rename(columns={'Longitude': 'lon'}, inplace=True)
 df.sort_values(by = 'Timestamp', inplace=True)
