@@ -18,6 +18,7 @@ from wordcloud import STOPWORDS
 nltk.download( 'stopwords' )
 nltk.download('punkt')
 import datetime
+import geopy
 
 st.set_page_config(layout="wide")
 
@@ -205,7 +206,7 @@ st.markdown('''
 
 page = st.sidebar.selectbox(
     "Navigation",
-    ["Home", "How did I collect the data?", "Data at a Glance", "My Recommendations", "Your Recommendations", "Contribute Reviews", "Give me feedback"], 
+    ["Home", "How did I collect the data?", "Contribute Reviews", "Data at a Glance", "My Recommendations", "Your Recommendations", "Give me feedback"], 
     index=0, 
     placeholder= "Where would you like to navigate to?"
 )
@@ -322,6 +323,166 @@ elif page == "How did I collect the data?":
 
     # Add the Google Form image
     st.image("datacollection.png")
+
+elif page == "Contribute Reviews": 
+
+    st.title("Eats & Adventures Tracker - Contribute Reviews")
+    
+    st.subheader('Please fill out the form with your reviews:')
+
+    csv_file = "form_submission.csv"
+
+    reviews_form = st.form("your_reviews")
+
+    with reviews_form:
+        st.subheader("Visit information")
+
+        name = st.text_input('What is the name of the location?',
+                              placeholder="Please fill in the official name of the location...")
+        
+        address = st.text_input('Where is it located?',
+                                placeholder="e.g., 123 Main Street, City, State, ZIP")
+        
+        category  = st.selectbox(
+            "What category does this location fall in?",
+            ("Coffee Shop", "Restaurant", "Bar", "Dessert", 
+             "Fast Food", "Diner", "Bakery", "Park", "Museum", 
+             "Outdoor Activity", "Indoor Activity", "Uber Eats", 
+             "Door Dash", "Brewery"),
+            index=None,
+            placeholder="Select a category...",
+        )
+        season = st.selectbox("What season did you visit in?", 
+                                ("Summer", "Fall", "Winter", "Spring"),
+                                index=None,
+                                placeholder='Please select a season')
+        
+        order = st.text_area("What did you do or order at the location? If you did not order anything please leave blank.",
+                             placeholder='Please fill in the box...')
+
+        st.subheader("Rating information")
+
+        rating = st.selectbox(
+            "What is your overall rating of this location?",
+            options = ['Not for me', 'Fair', 'Okay but not great', 'Really good', 'Best place ever!'], 
+            index=None,
+            placeholder='Please select your overall rating...'
+        )
+        price = st.selectbox(
+            "What is the price range?",
+            options = ['$', '$$', '$$$', '$$$$'], 
+            index=None, 
+            placeholder="Please fill select the price range."
+        )
+        atmosphere = st.selectbox(
+            "What is your rating on the atmosphere? This should reflect your opinion on the overall comfort and mood of the space.",
+            options = ['Uninviting', 'Not my vibe', 'Decent', 'Almost perfect', 'Amazing'], 
+            index=None, 
+            placeholder="Please select your rating of the atmosphere..."
+        )
+        food_quality = st.selectbox(
+            "What is your rating on the food quality? This should reflect your opinion on the overall enjoyment of the food you ordered. Feel free to skip if you did not order food! ",
+            options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
+             index=None, 
+            placeholder="Please select your rating of the food quality..."
+        )
+
+        service = st.selectbox(
+            "What is your rating on the service? ",
+            options = ['Just okay', 'Could be better', 'Meets expectations', 'Very friendly', 'Super Kind'], 
+            index=None, 
+            placeholder="Please select your rating of the food quality..."
+        )
+
+        unique_aspects = st.selectbox(
+            "What is your rating on the unique aspects? This should reflect your opinion on the decor, stand out features, unique offers, etc.",
+            options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
+            index=None, 
+            placeholder="Please select your rating of unique aspects..."
+        )
+
+        positive_review = st.text_area('Please give a positive review about the location:',
+                                       placeholder='Please fill in your positive review...')
+        
+        negative_review = st.text_area("Please give a negative review about the location:",
+                                       placeholder="Please fill in your negative review...")
+        would_go_back = st.selectbox(
+            "Would you go back?",
+            options=["Definitely Not", "Probably Not", "Maybe", "Probably Yes", "Absolutely"],
+            index=None,
+            placeholder="Please select an option...")
+
+        st.subheader('Accessbility')
+
+        parking_ease = st.selectbox(
+            "What was your experience getting to the location?",
+            options = ['Parked 20 blocks away', 'Kept circling to find a spot', 'It was manageable', 'Plenty of spaces close by', 'So easy and stress-free'], 
+            index=None, 
+            placeholder="Please select an option that best reflects your experience..."
+        )
+
+        parkingtype1 = st.selectbox(
+            "What was your primary parking type?",
+            options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro'],
+            index=None, 
+            placeholder="Please select your primary parking type..."
+        )
+
+        parkingtype2 = st.selectbox(
+            "What was your secondary parking type?",
+            options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro', 'None'],
+            index=None, 
+            placeholder="Please select your secondary parking type..."
+        )
+
+        st.subheader("Techical Compatibilty")
+
+        wifi_select = st.selectbox(
+            'Did the location offer free wifi?',
+            options=['Yes', 'No', 'Not Sure'],
+            index=None,
+            placeholder="Please select an option..."
+        )
+
+        charging_select = st.selectbox(
+            'Did the location offer charging outlets?',
+            options=['Yes', 'No', 'Not Sure'],
+            index=None,
+            placeholder="Please select an option..."
+        )
+        submit_button = st.form_submit_button('Submit')
+
+    if submit_button: 
+        time = datetime.datetime.now().strftime("%m/%d/%Y")
+        new_data = pd.DataFrame({
+            "Timestamp" : [time], 
+            "Name" : [name],
+            "Location": [address],
+            "Category": [category],
+            "Season Visited": [season], 
+            "What I got/did" : [order],
+            "Rating": [rating], 
+            "Price": [price],
+            "Atmosphere": [atmosphere], 
+            "Food quality": [food_quality],
+            "Service":[service],
+            "Unique Aspects": [unique_aspects], 
+            "Positive Review": [positive_review], 
+            "Negative Review": [negative_review],
+            "Would go back?": [would_go_back], 
+            "Parking": [parking_ease],
+            "WiFi": [wifi_select], 
+            "Charging Outlets": [charging_select]
+        })
+
+        try: 
+            existing_data = pd.read_csv(csv_file)
+            updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+        except FileNotFoundError: 
+            updated_data=new_data
+
+        updated_data.to_csv(csv_file, index=False)
+        st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
 
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
@@ -759,10 +920,12 @@ elif page == "My Recommendations":
     else:
         st.write("No locations match your selected amenities. Please try a different option.")
 
-
 elif page == "Your Recommendations": 
 
     st.title("Eats & Adventures Tracker - Your Recommendations")
+    df2 = pd.read_csv("form_submission.csv")
+    st.dataframe(df2)
+
 #             else: 
 #                 st.write('Sorry there are no further recommendations. Please check back again soon. :)')
 
@@ -773,165 +936,6 @@ elif page == "Your Recommendations":
 #     else:
 #         st.write("No locations match your selected amenities. Please try a different option.")
 
-elif page == "Contribute Reviews": 
-
-    st.title("Eats & Adventures Tracker - Contribute Reviews")
-    
-    st.subheader('Please fill out the form with your reviews:')
-
-    csv_file = "form_submission.csv"
-
-    reviews_form = st.form("your_reviews")
-
-    with reviews_form:
-        st.subheader("Visit information")
-
-        name = st.text_input('What is the name of the location?',
-                              placeholder="Please fill in the official name of the location...")
-        
-        address = st.text_input('Where is it located?',
-                                placeholder="e.g., 123 Main Street, City, State, ZIP")
-        
-        category  = st.selectbox(
-            "What category does this location fall in?",
-            ("Coffee Shop", "Restaurant", "Bar", "Dessert", 
-             "Fast Food", "Diner", "Bakery", "Park", "Museum", 
-             "Outdoor Activity", "Indoor Activity", "Uber Eats", 
-             "Door Dash", "Brewery"),
-            index=None,
-            placeholder="Select a category...",
-        )
-        season = st.selectbox("What season did you visit in?", 
-                                ("Summer", "Fall", "Winter", "Spring"),
-                                index=None,
-                                placeholder='Please select a season')
-        
-        order = st.text_area("What did you do or order at the location? If you did not order anything please leave blank.",
-                             placeholder='Please fill in the box...')
-
-        st.subheader("Rating information")
-
-        rating = st.selectbox(
-            "What is your overall rating of this location?",
-            options = ['Not for me', 'Fair', 'Okay but not great', 'Really good', 'Best place ever!'], 
-            index=None,
-            placeholder='Please select your overall rating...'
-        )
-        price = st.selectbox(
-            "What is the price range?",
-            options = ['$', '$$', '$$$', '$$$$'], 
-            index=None, 
-            placeholder="Please fill select the price range."
-        )
-        atmosphere = st.selectbox(
-            "What is your rating on the atmosphere? This should reflect your opinion on the overall comfort and mood of the space.",
-            options = ['Uninviting', 'Not my vibe', 'Decent', 'Almost perfect', 'Amazing'], 
-            index=None, 
-            placeholder="Please select your rating of the atmosphere..."
-        )
-        food_quality = st.selectbox(
-            "What is your rating on the food quality? This should reflect your opinion on the overall enjoyment of the food you ordered. Feel free to skip if you did not order food! ",
-            options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
-             index=None, 
-            placeholder="Please select your rating of the food quality..."
-        )
-
-        service = st.selectbox(
-            "What is your rating on the service? ",
-            options = ['Just okay', 'Could be better', 'Meets expectations', 'Very friendly', 'Super Kind'], 
-            index=None, 
-            placeholder="Please select your rating of the food quality..."
-        )
-
-        unique_aspects = st.selectbox(
-            "What is your rating on the unique aspects? This should reflect your opinion on the decor, stand out features, unique offers, etc.",
-            options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
-            index=None, 
-            placeholder="Please select your rating of unique aspects..."
-        )
-
-        positive_review = st.text_area('Please give a positive review about the location:',
-                                       placeholder='Please fill in your positive review...')
-        
-        negative_review = st.text_area("Please give a negative review about the location:",
-                                       placeholder="Please fill in your negative review...")
-        would_go_back = st.selectbox(
-            "Would you go back?",
-            options=["Definitely Not", "Probably Not", "Maybe", "Probably Yes", "Absolutely"],
-            index=None,
-            placeholder="Please select an option...")
-
-        st.subheader('Accessbility')
-
-        parking_ease = st.selectbox(
-            "What was your experience getting to the location?",
-            options = ['Parked 20 blocks away', 'Kept circling to find a spot', 'It was manageable', 'Plenty of spaces close by', 'So easy and stress-free'], 
-            index=None, 
-            placeholder="Please select an option that best reflects your experience..."
-        )
-
-        parkingtype1 = st.selectbox(
-            "What was your primary parking type?",
-            options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro'],
-            index=None, 
-            placeholder="Please select your primary parking type..."
-        )
-
-        parkingtype2 = st.selectbox(
-            "What was your secondary parking type?",
-            options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro', 'None'],
-            index=None, 
-            placeholder="Please select your secondary parking type..."
-        )
-
-        st.subheader("Techical Compatibilty")
-
-        wifi_select = st.selectbox(
-            'Did the location offer free wifi?',
-            options=['Yes', 'No', 'Not Sure'],
-            index=None,
-            placeholder="Please select an option..."
-        )
-
-        charging_select = st.selectbox(
-            'Did the location offer charging outlets?',
-            options=['Yes', 'No', 'Not Sure'],
-            index=None,
-            placeholder="Please select an option..."
-        )
-        submit_button = st.form_submit_button('Submit')
-
-    if submit_button: 
-        time = datetime.datetime.now().strftime("%m/%d/%Y")
-        new_data = pd.DataFrame({
-            "Timestamp" : [time], 
-            "Name" : [name],
-            "Location": [address],
-            "Category": [category],
-            "Season Visited": [season], 
-            "What I got/did" : [order],
-            "Rating": [rating], 
-            "Price": [price],
-            "Atmosphere": [atmosphere], 
-            "Food quality": [food_quality],
-            "Service":[service],
-            "Unique Aspects": [unique_aspects], 
-            "Positive Review": [positive_review], 
-            "Negative Review": [negative_review],
-            "Would go back?": [would_go_back], 
-            "Parking": [parking_ease],
-            "WiFi": [wifi_select], 
-            "Charging Outlets": [charging_select]
-        })
-
-        try: 
-            existing_data = pd.read_csv(csv_file)
-            updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-        except FileNotFoundError: 
-            updated_data=new_data
-
-        updated_data.to_csv(csv_file, index=False)
-        st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
 
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
 
