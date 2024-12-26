@@ -21,6 +21,7 @@ import datetime
 import geopy
 import re
 import usaddress
+import os
 
 st.set_page_config(layout="wide")
 
@@ -732,14 +733,8 @@ elif page == "Contribute Reviews":
             index=None,
             placeholder="Please select an option..."
         )
-
-        # valid_input = all([name, address, category, season, 
-        #                order, p, r, p, a, f,
-        #                  s,u, positive_review,negative_review,
-        #                  would_go_back,parking_ease,parkingtype1,
-        #                    parkingtype2,wifi_select, charging_select])
         
-        submit_button = st.form_submit_button('Submit', type='primary')
+        submit_button = st.form_submit_button('Submit Form', type='primary')
 
     if submit_button: 
         time = datetime.datetime.now().strftime("%m/%d/%Y")
@@ -764,14 +759,20 @@ elif page == "Contribute Reviews":
             "Charging Outlets": [charging_select]
         })
 
-        try: 
-            existing_data = pd.read_csv(csv_file)
-            updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-        except FileNotFoundError: 
-            updated_data=new_data
+        if os.path.exists(csv_file) and os.path.getsize(csv_file) > 0:
+
+            try:
+                existing_data = pd.read_csv(csv_file)
+                updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+            except pd.errors.EmptyDataError:
+                updated_data = new_data
+        else:
+            updated_data = new_data
+
 
         updated_data.to_csv(csv_file, index=False)
-        st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
+        current_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        st.success(f"Thank you for contributing to this project! Your review was submitted on {current_time}", icon="✅")
 
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
