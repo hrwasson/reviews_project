@@ -966,37 +966,41 @@ elif page == "Data at a Glance":
 # MY RECOMMENDATIONS 🍜
 elif page == "My Recommendations": 
     st.title("Eats & Adventures Tracker | My Recommendations")
-    
-    recommendations(df)
+    try: 
+        recommendations(df)
+    except: 
+        st.write("Sorry this page is not availiable at the moment. ☹️ ")
 
-# YOUR RECOMMENDATIONS 🍕
+# YOUR RECOMMENDATIONS PAGE🍕
 elif page == "Your Recommendations": 
 
     st.title("Eats & Adventures Tracker | Your Recommendations")
-
+    try: 
     #TODO: data frame formatting
-    df2 = pd.read_csv("form_submission.csv")
+        df2 = pd.read_csv("form_submission.csv")
 
-    df2 = clean_dataframe(df2)
+        df2 = clean_dataframe(df2)
 
-    df2_map = px.scatter_mapbox(
-            df2,
-            lat='lat',
-            lon='lon',
-            hover_name='Name',
-            size = 'size',
-            color='Rating',  # Use the Rating column for color mapping
-            color_continuous_scale='Purpor',
-            mapbox_style='carto-positron',
-            title='Publically Reviewed Locations:',
-            width=1000,
-            height=700,
-            zoom=2
-        )
-    
-    st.plotly_chart(df2_map)
+        df2_map = px.scatter_mapbox(
+                df2,
+                lat='lat',
+                lon='lon',
+                hover_name='Name',
+                size = 'size',
+                color='Rating',  # Use the Rating column for color mapping
+                color_continuous_scale='Purpor',
+                mapbox_style='carto-positron',
+                title='Publically Reviewed Locations:',
+                width=1000,
+                height=700,
+                zoom=2
+            )
+        
+        st.plotly_chart(df2_map)
 
-    recommendations(df=df2)
+        recommendations(df=df2)
+    except: 
+        st.write("Sorry this page is not availiable at the moment. ☹️ ")
 
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
 
