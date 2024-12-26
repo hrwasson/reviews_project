@@ -573,7 +573,7 @@ if page == "Home":
 
         st.plotly_chart(reccomendation_map)
 
-    left, middle, right = st.columns((2, 5, 2))
+    left, middle, right = st.columns((2, 7, 2))
 
     with middle:
         attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
