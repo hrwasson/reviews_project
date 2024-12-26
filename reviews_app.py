@@ -965,12 +965,12 @@ elif page == "Your Recommendations":
 
     df2['Count of Reviews'] = 1
     df2['Overall Review'] = df2['Positive Review'] + " " + df2['Negative Review']
+    df2['Rating'] = df2['Rating'].apply(rating)
     df2['color'] = df2['Rating'].apply(get_color)
     df2['size'] = df2['Rating'].apply(get_size)
     df2['Rating'] = df2['Rating'].to_list()
     df2['Overall Sentiment'] = df2['Overall Review'].apply(clean).apply(get_overall_sentiment)
     df2['Atmosphere'] = df2['Atmosphere'].apply(atmosphere)
-    df2['Rating'] = df2['Rating'].apply(rating)
     df2['Food quality'] = df2['Food quality'].apply(food_quality)
     df2['Service'] = df2['Service'].apply(service)
     df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
