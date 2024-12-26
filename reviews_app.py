@@ -1,3 +1,4 @@
+# IMPORTING PACKAGES 📦
 import pandas as pd
 import nltk
 import nltk.stem.porter
@@ -15,31 +16,35 @@ import transformers
 from transformers import pipeline
 from wordcloud import WordCloud
 from wordcloud import STOPWORDS
-nltk.download( 'stopwords' )
-nltk.download('punkt')
 import datetime
 import geopy
 import re
 import usaddress
 import os
+# NECESSARY DOWNLOADS 🔽
+nltk.download( 'stopwords' )
+nltk.download('punkt')
 
+# TODO: 
+# - COMMENT CODE 
+# - VERIFY CONTRIBUTIONS FORM IS WORKING 
+
+# SETTING UP THE PAGE FOR THE STREAMLIT APP
 st.set_page_config(layout="wide")
 
-# Access the sheet_id
+# ACCESSING THE URL TO PULL IN MY RECOMMENDATIONS 🪪
 sheet_id = st.secrets["sheets"]["url"]
-
-print(f"Sheet ID: {sheet_id}")
-
 df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
 
+
+# INITIAL CLEANING OF THE DATA 🛁
 df.rename(columns={'Latitude': 'lat'}, inplace=True)
 df.rename(columns={'Longitude': 'lon'}, inplace=True)
 df.sort_values(by = 'Timestamp', inplace=True)
 df['Count of Reviews'] = 1
 df['Overall Review'] = df['Positive Review'] + " " + df['Negative Review']
-
-# getting the colors for the ratings 
  
+ # ALL FUNCTIONS USED THROUGHOUT APP 💻
 def get_color(rating):
     if rating == 1: return '#efbbff'
     elif rating == 2: return '#d896ff'
@@ -47,7 +52,6 @@ def get_color(rating):
     elif rating == 4: return '#800080'
     elif rating == 5: return '#660066'
 
-# getting the sizes for the ratings
 def get_size(rating):
     if rating == 1: return 1
     elif rating == 2: return 2
@@ -501,7 +505,7 @@ df['Price Range'] = df['Price'].apply(get_price)
 df['Overall Sentiment'] = df['Overall Review'].apply(clean).apply(get_overall_sentiment)
 
 #********************************************************************************************************************************************
-# creating the streamlit app: 
+# BEGIN STREAMLIT APP DEV 
 
 # BEGIN SIDE BAR
 logo = "hannah.jpg"
@@ -530,7 +534,7 @@ st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
 # END SIDE BAR
 
-
+# HOME PAGE 🏠
 if page == "Home":
     st.title("Eats & Adventures Tracker | Home")
 
@@ -591,6 +595,7 @@ if page == "Home":
         attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
         spider_chart(df, attribute_list)
 
+# DATA COLLECTION PAGE 📊
 elif page == "How did I collect the data?":
     st.title("Eats & Adventures Tracker | How did I collect the data?")
 
@@ -612,6 +617,7 @@ elif page == "How did I collect the data?":
     # Add the Google Form image
     st.image("datacollection.png")
 
+# PUBLIC REVIEW CONTRIBUTION FORM PAGE 📢
 elif page == "Contribute Reviews": 
 
     st.title("Eats & Adventures Tracker | Contribute Reviews")
@@ -778,6 +784,7 @@ elif page == "Contribute Reviews":
         updated_data.to_csv(csv_file, index=False)
         st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
 
+# DATA AT A GLANCE PAGE 📈
 elif page == "Data at a Glance":
 
     st.title("Eats & Adventures Tracker | Data at a Glance")
@@ -956,11 +963,13 @@ elif page == "Data at a Glance":
     )
         st.plotly_chart(pie_chart4)
 
+# MY RECOMMENDATIONS 🍜
 elif page == "My Recommendations": 
     st.title("Eats & Adventures Tracker | My Recommendations")
     
     recommendations(df)
-    
+
+# YOUR RECOMMENDATIONS 🍕
 elif page == "Your Recommendations": 
 
     st.title("Eats & Adventures Tracker | Your Recommendations")
@@ -991,6 +1000,11 @@ elif page == "Your Recommendations":
 
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
 
+# GIVE ME YOUR FEEDBACK PAGE 📧
 elif page == "Give me feedback": 
+    # THIS PAGE WILL HAVE  A CONTACT ME PAGE AND AN EMAIL FORWARDING FORM
     st.title("Eats & Adventures Tracker | Give me feedback")
+    
 
+#END STREAMLIT APP DEV
+#********************************************************************************************************************************************
