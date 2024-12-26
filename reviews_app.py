@@ -18,12 +18,12 @@ from wordcloud import STOPWORDS
 nltk.download( 'stopwords' )
 nltk.download('punkt')
 import datetime
-import toml
 
 st.set_page_config(layout="wide")
 
 # Access the sheet_id
 sheet_id = st.secrets['google_sheets']['my_reviews']
+
 print(f"Sheet ID: {sheet_id}")
 
 df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
