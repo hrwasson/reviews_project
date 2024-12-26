@@ -177,6 +177,256 @@ def go_back(data):
     if data =='Probably Yes': return 4
     if data == 'Absolutely': return 5   
 
+def recommendations(df):
+
+    selected_region = st.selectbox("Where are you traveling to?", 
+                 options = df['City'].dropna().unique(), 
+                 index= None,
+                 placeholder="Select a location")
+    
+    if selected_region: 
+        filtered_activities = df[df['City'] == selected_region]['Category'].unique()
+    else: 
+        filtered_activities = []
+
+    try: 
+        selected_activity = st.selectbox("What kind of activity are you looking to do?", 
+                 options = filtered_activities,
+                 index=None,
+                 placeholder='Select an activity'
+                 )
+    except: 
+        print("idk what went wrong")
+
+    if selected_activity: 
+
+        reccomendation_df = df[(df['City'] == selected_region) & (df['Category'] == selected_activity)]
+
+    
+    start_price, end_price = st.select_slider(
+        "Select a price range",
+        options=[
+            "$",
+            "$$",
+            "$$$",
+            "$$$$"
+        ],
+        value=("$", "$$$$"),
+        
+    )
+
+    price_df = df[(df['City'] == selected_region) & (df['Category'] == selected_activity) & (df['Price Range'] >= start_price) & (df['Price Range'] <= end_price)]
+
+    ammenities_select = st.selectbox("What amenities are important to you? (e.g., parking, Wi-Fi, charging outlets, etc.)", 
+                                      options = ['None', 'Easy Parking', 'Wi-Fi', 'Charging Outlets'],
+                                      placeholder='None', 
+                                      index=None
+                                      )
+    ammenities_df = price_df.copy()
+
+
+    if ammenities_select == 'Easy Parking' : ammenities_df = parking(price_df)
+    elif ammenities_select == 'Wi-Fi': ammenities_df = wifi(price_df)
+    elif ammenities_select == 'Charging Outlets': ammenities_df = charging_outlets(price_df)  
+    elif ammenities_select == 'None': ammenities_df = ammenities_df
+
+    st.divider()
+
+    # putting location suggestion here: 
+
+    if not ammenities_df.empty:  # Check if filtered DataFrame has data
+
+        tab1, tab2 = st.tabs(['Overall Recommendation', 'Other Locations You Might Enjoy'])
+
+        with tab1: 
+            ammenities_df['Rating'] = pd.to_numeric(ammenities_df['Rating'], errors='coerce')
+
+            output = ammenities_df.sort_values(by=['Rating'], ascending=False).reset_index(drop=True)
+
+            #text outputs
+            emotion = output['Overall Sentiment'][0]
+            name = output['Name'][0]
+            location = output['Location'][0]
+            wifi_present = output['WiFi'][0]
+            charging = output['Charging Outlets'][0]
+            price = output['Price Range'][0]
+            parking1 = output['Parking Type 1'][0]
+            output['Parking Type 2'].fillna('', inplace = True)
+            parking2 = output['Parking Type 2'][0]
+            whatIGot = output['What I got/did'][0]
+            
+            st.subheader(f"Based on your selections, you would be {emotion} at:")
+
+            text_content = (
+                    f"**Name:** {name}\n\n"
+                    f"**Located at:** {location}\n\n"
+                    f"**Price:** {price}\n\n"
+                    f"**Amenities present:**\n"
+                    f"- **Wi-Fi:** {wifi_present}\n"
+                    f"- **Charging Outlets:** {charging}\n\n"
+                    f"**You can expect to park:** {parking1} | {parking2}\n\n"
+                    f"**Something you might enjoy there:** {whatIGot}")
+            
+            st.markdown(text_content)
+
+            word_cloud_review = word_cloud(output)
+
+            st.image(word_cloud_review)
+
+            map_output = pd.DataFrame(output).head(1)
+
+            reccomendation_map = px.scatter_mapbox(
+                map_output,
+                lat='lat',
+                lon='lon',
+                size='size',
+                hover_name='Name',
+                color='Rating',  # Use the Rating column for color mapping
+                color_continuous_scale='Purpor',
+                mapbox_style='carto-positron',
+                title=f'{name}:',
+                width=1000,
+                height=500, 
+                zoom = 15
+            )
+            reccomendation_map.update_traces(
+                hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+            )
+            st.plotly_chart(reccomendation_map)
+        
+        with tab2: 
+            ammenities_df['Rating'] = pd.to_numeric(ammenities_df['Rating'], errors='coerce')
+
+            output = ammenities_df.sort_values(by=['Rating'], ascending=False).reset_index(drop=True)
+            
+            #text outputs
+            #emotion = output['Overall Sentiment'][1:6]
+
+            if len(output) >= 2: 
+
+                emotion = output['Overall Sentiment'][1]
+                name = output['Name'][1]
+                location = output['Location'][1]
+                wifi_present = output['WiFi'][1]
+                charging = output['Charging Outlets'][1]
+                price = output['Price Range'][1]
+                parking1 = output['Parking Type 1'][1]
+                output['Parking Type 2'].fillna('', inplace = True)
+                parking2 = output['Parking Type 2'][1]
+                whatIGot = output['What I got/did'][1]
+                
+                #st.subheader(f"Based on your selections, you would be {emotion} at:")
+
+                st.markdown(
+                        f"**Name:** {name}\n\n"
+                        f"**Located at:** {location}\n\n"
+                        f"**Price:** {price}\n\n"
+                        f"**Amenities present:**\n"
+                        f"- **Wi-Fi:** {wifi_present}\n"
+                        f"- **Charging Outlets:** {charging}\n\n"
+                        f"**You can expect to park:** {parking1} | {parking2}\n\n"
+                        f"**Something you might enjoy there:** {whatIGot}")
+                
+                map_output = pd.DataFrame(output).head(2)
+
+                reccomendation_map = px.scatter_mapbox(
+                    map_output,
+                    lat='lat',
+                    lon='lon',
+                    size='size',
+                    hover_name='Name',
+                    color='Rating',  # Use the Rating column for color mapping
+                    color_continuous_scale='Purpor',
+                    mapbox_style='carto-positron',
+                    title='Other Reviewed Locations',
+                    width=1000,
+                    height=500, 
+                    zoom = 7
+                )
+                reccomendation_map.update_traces(
+                    hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+                )
+                st.plotly_chart(reccomendation_map)
+
+            elif len(output) >= 4: 
+
+                name1, name2, name3 = output['Name'][1:4]
+                location1, location2, location3 = output['Location'][1:4]
+                wifi_present1, wifi_present2, wifi_present3 = output['WiFi'][1:4]
+                charging1, charging2, charging3 = output['Charging Outlets'][1:4]
+                price1, price2, price3 = output['Price Range'][1:4]
+                parking1, parking12, parking13 = output['Parking Type 1'][1:4]
+                output['Parking Type 2'].fillna('', inplace = True)
+                parking21, parking22, parking23 = output['Parking Type 2'][1:4]
+                whatIGot1, whatIGot2, whatIGot3 = output['What I got/did'][1:4]
+                
+                st.subheader("Other locations you might enjoy...")
+
+                st.markdown(
+                    f"1. **Name:** {name1}\n\n"
+                    f"**Located at:** {location1}\n\n"
+                    f"**Price:** {price1}\n\n"
+                    f"**Amenities present:**\n"
+                    f"- **Wi-Fi:** {wifi_present1}\n"
+                    f"- **Charging Outlets:** {charging1}\n\n"
+                    f"**You can expect to park:** {parking1} | {parking21}\n\n"
+                    f"**Something you might enjoy there:** {whatIGot1}"
+                )
+
+                st.divider()
+
+                st.markdown(
+                    f"2. **Name:** {name2}\n\n"
+                    f"**Located at:** {location2}\n\n"
+                    f"**Price:** {price2}\n\n"
+                    f"**Amenities present:**\n"
+                    f"- **Wi-Fi:** {wifi_present2}\n"
+                    f"- **Charging Outlets:** {charging2}\n\n"
+                    f"**You can expect to park:** {parking12} | {parking22}\n\n"
+                    f"**Something you might enjoy there:** {whatIGot2}"
+                )
+                st.divider()
+                st.markdown(
+                    f"3. **Name:** {name3}\n\n"
+                    f"**Located at:** {location3}\n\n"
+                    f"**Price:** {price3}\n\n"
+                    f"**Amenities present:**\n"
+                    f"- **Wi-Fi:** {wifi_present3}\n"
+                    f"- **Charging Outlets:** {charging3}\n\n"
+                    f"**You can expect to park:** {parking13} | {parking23}\n\n"
+                    f"**Something you might enjoy there:** {whatIGot3}"
+                )
+
+                word_cloud_review = word_cloud_other(output)
+
+                st.image(word_cloud_review)
+
+                map_output = pd.DataFrame(output).head(5)
+
+                reccomendation_map = px.scatter_mapbox(
+                    map_output,
+                    lat='lat',
+                    lon='lon',
+                    size='size',
+                    hover_name='Name',
+                    color='Rating',  # Use the Rating column for color mapping
+                    color_continuous_scale='Purpor',
+                    mapbox_style='carto-positron',
+                    title='Other Reviewed Locations',
+                    width=1000,
+                    height=500, 
+                    zoom = 10
+                )
+                reccomendation_map.update_traces(
+                    hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+                )
+                st.plotly_chart(reccomendation_map)
+            else: 
+                st.write('Sorry there are no further recommendations. Please check back again soon. :)')
+
+    else:
+        st.write("No locations match your selected amenities. Please try a different option.")
+
 #def get_walking_distance(location1, location2): 
     #return haversine(location1, location2, unit=Unit.MILES)
 
@@ -248,7 +498,7 @@ st.markdown('''
 
 page = st.sidebar.selectbox(
     "Navigation",
-    ["Home", "How did I collect the data?", "Contribute Reviews", "Data at a Glance", "My Recommendations", "Your Recommendations", "Give me feedback"], 
+    ["Home", "How did I collect the data?", "Contribute Reviews", "Data at a Glance", "My Recommendations", "Your Recommendations", "Give me feedback", "test"], 
     index=0, 
     placeholder= "Where would you like to navigate to?"
 )
@@ -705,10 +955,6 @@ elif page == "Data at a Glance":
 elif page == "My Recommendations": 
     st.title("Eats & Adventures Tracker - My Recommendations")
 
-    # df['Region'] = None
-    # df.loc[df['City'].isin(['Cary', 'Raleigh', 'Durham', 'Morrisville']), 'Region'] = 'Raleigh/Durham/Chapel Hill'
-    # df.loc[df['City'].isin(['Arlington', 'Washington, D.C.']), 'Region'] = 'Arlington, VA/Washington, D.C.'
-
     selected_region = st.selectbox("Where are you traveling to?", 
                  options = df['City'].dropna().unique(), 
                  index= None,
@@ -973,7 +1219,6 @@ elif page == "Your Recommendations":
     df2['color'] = df2['Rating'].apply(get_color)
     df2['size'] = df2['Rating'].apply(get_size)
     df2['Rating'] = df2['Rating'].to_list()
-    df2['Price Range'] = df2['Price'].apply(get_price)
     df2['Overall Sentiment'] = df2['Overall Review'].apply(clean).apply(get_overall_sentiment)
     df2['Atmosphere'] = df2['Atmosphere'].apply(atmosphere)
     df2['Rating'] = df2['Rating'].apply(rating)
@@ -1002,12 +1247,9 @@ elif page == "Your Recommendations":
 
     col1,col2 = st.columns(2)
 
-
-
-        
-
 elif page == "Give me feedback": 
     st.title("Eats & Adventures Tracker - Give me feedback")
 
-
+elif page == "test": 
+    recommendations(df=df)
 
