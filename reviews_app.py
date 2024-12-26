@@ -733,13 +733,13 @@ elif page == "Contribute Reviews":
             placeholder="Please select an option..."
         )
 
-        valid_input = all([name, address, category, season, 
-                       order, p, r, p, a, f,
-                         s,u, positive_review,negative_review,
-                         would_go_back,parking_ease,parkingtype1,
-                           parkingtype2,wifi_select, charging_select])
+        # valid_input = all([name, address, category, season, 
+        #                order, p, r, p, a, f,
+        #                  s,u, positive_review,negative_review,
+        #                  would_go_back,parking_ease,parkingtype1,
+        #                    parkingtype2,wifi_select, charging_select])
         
-        submit_button = st.form_submit_button('Submit', disabled=not valid_input, type='primary')
+        submit_button = st.form_submit_button('Submit', type='primary')
 
     if submit_button: 
         time = datetime.datetime.now(tz='EST').strftime("%m/%d/%Y")
@@ -969,7 +969,7 @@ elif page == "Your Recommendations":
     df2 = pd.read_csv("form_submission.csv")
 
     st.dataframe(df2)
-    
+
     df2['Count of Reviews'] = 1
     df2['Overall Review'] = df2['Positive Review'] + " " + df2['Negative Review']
     df2['Rating'] = df2['Rating'].apply(rating)
