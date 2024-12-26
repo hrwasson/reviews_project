@@ -433,13 +433,14 @@ def recommendations(df):
 def lat(address):
     locate = geopy.Nominatim(user_agent="Geopy Library")
     location = locate.geocode(address)
-    return location.latitude
-
+    if location: return location.latitude
+    else: return None
 
 def lon(address):
     locate = geopy.Nominatim(user_agent="Geopy Library")
     location = locate.geocode(address)
-    return location.longitude
+    if location: return location.longitude
+    else: return None
 
 def city(address):
     parsed = usaddress.parse(address)
