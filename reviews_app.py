@@ -461,7 +461,7 @@ def spider_chart(df, attributes):
     df = pd.DataFrame(df)
     median_df = df.groupby('Category')[attributes].median().reset_index()
     for _, row in median_df.iterrows(): 
-        
+
         category = row['Category']
 
         plot_data = pd.DataFrame(dict(
@@ -477,6 +477,8 @@ def spider_chart(df, attributes):
     fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
 
     st.plotly_chart(fig, on_select=callable)
+
+
 #def get_walking_distance(location1, location2): 
    # return haversine(location1, location2, unit=Unit.MILES)
 
@@ -623,19 +625,10 @@ if page == "Home":
                     )
 
         st.plotly_chart(reccomendation_map)
-    
-    data = pd.DataFrame(dict(
-    r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
-    theta=['Atmosphere','Food Quality','Service', 'Unique Aspects']))
 
-    fig = px.line_polar(data, r='r', theta='theta', line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
-                    template="plotly_dark")
-    
-    #fig.update_traces(fill='toself')
-
-    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
-
-    st.plotly_chart(fig, on_select=callable)
+        attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
+        spider_chart(df, attribute_list)
+        
 
 elif page == "How did I collect the data?":
     st.title("Eats & Adventures Tracker - How did I collect the data?")
