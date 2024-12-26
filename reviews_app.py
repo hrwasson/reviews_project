@@ -728,16 +728,16 @@ elif page == "Contribute Reviews":
             placeholder="Please select an option..."
         )
 
-        valid_input = all([name.strip(), address.strip(), category.strip(), season.strip(), 
-                       order.strip(), p.strip(), r.strip(), p.strip(), a.strip(), f.strip(),
-                         s.strip(),u.strip(), positive_review.strip(),negative_review.strip(),
-                         would_go_back.strip(),parking_ease.strip(),parkingtype1.strip(),
-                           parkingtype2.strip(),wifi_select.strip(), charging_select.strip()])
+        valid_input = all([name, address, category, season, 
+                       order, p, r, p, a, f,
+                         s,u, positive_review,negative_review,
+                         would_go_back,parking_ease,parkingtype1,
+                           parkingtype2,wifi_select, charging_select])
         
         submit_button = st.form_submit_button('Submit', disabled=not valid_input, type='primary')
 
     if submit_button: 
-        time = datetime.datetime.now().strftime("%m/%d/%Y")
+        time = datetime.datetime.now(tz='EST').strftime("%m/%d/%Y")
         new_data = pd.DataFrame({
             "Timestamp" : [time], 
             "Name" : [name],
