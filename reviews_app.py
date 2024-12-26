@@ -135,6 +135,48 @@ def parking_colors(parking_type):
     elif parking_type == "Metro": return '#6a51a3'
     elif parking_type == "None": return '#54278f'
 
+def rating(data): 
+    if data == 'Not for me': return 1
+    if data == 'Fair': return 2
+    if data == 'Okay but not great': return 3
+    if data =='Really good': return 4
+    if data == 'Best place ever!': return 5
+
+def atmosphere(data): 
+    if data == 'Uninviting': return 1
+    if data == 'Not my vibe': return 2
+    if data == 'Decent': return 3
+    if data =='Almost perfect': return 4
+    if data == 'Amazing': return 5
+
+def food_quality(data):
+    if data == 'Not my favorite': return 1
+    if data == 'Mediocre': return 2
+    if data == 'Decent': return 3
+    if data =='Very good': return 4
+    if data == 'Outstanding': return 5
+
+def service(data):
+    if data == 'Just okay': return 1
+    if data == 'Could be better': return 2
+    if data == 'Meets expectations': return 3
+    if data =='Very friendly': return 4
+    if data == 'Super Kind': return 5
+
+def unique_aspects(data): 
+    if data == 'Not my favorite': return 1
+    if data == 'Mediocre': return 2
+    if data == 'Decent': return 3
+    if data =='Very good': return 4
+    if data == 'Outstanding': return 5   
+
+def go_back(data): 
+    if data == 'Definitely Not': return 1
+    if data == 'Probably Not': return 2
+    if data == 'Maybe': return 3
+    if data =='Probably Yes': return 4
+    if data == 'Absolutely': return 5   
+
 #def get_walking_distance(location1, location2): 
     #return haversine(location1, location2, unit=Unit.MILES)
 
@@ -301,7 +343,6 @@ if page == "Home":
     fig.update_traces(fill='toself')
     fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
     st.plotly_chart(fig, on_select=callable)
-
 
 elif page == "How did I collect the data?":
     st.title("Eats & Adventures Tracker - How did I collect the data?")
@@ -923,8 +964,26 @@ elif page == "My Recommendations":
 elif page == "Your Recommendations": 
 
     st.title("Eats & Adventures Tracker - Your Recommendations")
+
+    #TODO: data frame formatting
     df2 = pd.read_csv("form_submission.csv")
-    st.dataframe(df2)
+
+    df2['Count of Reviews'] = 1
+    df2['Overall Review'] = df2['Positive Review'] + " " + df2['Negative Review']
+    df2['color'] = df2['Rating'].apply(get_color)
+    df2['size'] = df2['Rating'].apply(get_size)
+    df2['Rating'] = df2['Rating'].to_list()
+    df2['Price Range'] = df2['Price'].apply(get_price)
+    df2['Overall Sentiment'] = df2['Overall Review'].apply(clean).apply(get_overall_sentiment)
+    df2['Atmosphere'] = df2['Atmosphere'].apply(atmosphere)
+    df2['Rating'] = df2['Rating'].apply(rating)
+    df2['Food Quality'] = df2['Food Quality'].apply(food_quality)
+    df2['Service'] = df2['Service'].apply(service)
+    df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
+    df2['Would go back?'] = df2['Would go back?'].apply(go_back)
+
+    st.data_frame(df2)
+ 
 
 #             else: 
 #                 st.write('Sorry there are no further recommendations. Please check back again soon. :)')
