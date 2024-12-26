@@ -22,7 +22,7 @@ import datetime
 st.set_page_config(layout="wide")
 
 # Access the sheet_id
-sheet_id = st.secrets['google_sheets']['my_reviews']
+sheet_id = st.secrets['my_reviews']
 
 print(f"Sheet ID: {sheet_id}")
 
