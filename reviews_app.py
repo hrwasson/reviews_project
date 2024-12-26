@@ -974,7 +974,7 @@ elif page == "Your Recommendations":
             lat='lat',
             lon='lon',
             hover_name='Name',
-            size = 5,
+            size = 'size',
             color='Rating',  # Use the Rating column for color mapping
             color_continuous_scale='Purpor',
             mapbox_style='carto-positron',
