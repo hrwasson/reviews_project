@@ -989,11 +989,13 @@ elif page == "Your Recommendations":
             color='Rating',  # Use the Rating column for color mapping
             color_continuous_scale='Purpor',
             mapbox_style='carto-positron',
-            title='Reviewed Locations:',
+            title='Publically Reviewed Locations:',
             width=1000,
             height=700,
             zoom=2
         )
+    
+    st.plotly_chart(df2_map)
 
     recommendations(df=df2)
 
