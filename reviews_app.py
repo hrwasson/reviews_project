@@ -606,8 +606,10 @@ if page == "Home":
     
     data = pd.DataFrame(dict(
     r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
-    theta=['Atmosphere','Food Quality','Service', 'Unique Aspects']))
-    fig = px.line_polar(data, r='r', theta='theta', line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
+    theta=['Atmosphere','Food Quality','Service', 'Unique Aspects'],
+    lines = df['Category']))
+
+    fig = px.line_polar(data, r='r', theta='theta', color='lines', line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
                     template="plotly_dark")
     
     #fig.update_traces(fill='toself')
