@@ -773,7 +773,6 @@ elif page == "Contribute Reviews":
 
         updated_data.to_csv(csv_file, index=False)
         st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
-
         
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
@@ -982,7 +981,21 @@ elif page == "Your Recommendations":
     df2['State'] = df2['Location'].apply(state)
     df2['Price Range'] = df2['Price']
 
-    st.dataframe(df2)
+    df2_map = px.scatter_mapbox(
+            df2,
+            lat='lat',
+            lon='lon',
+            size='size',
+            hover_name='Name',
+            color='Rating',  # Use the Rating column for color mapping
+            color_continuous_scale='Purpor',
+            mapbox_style='carto-positron',
+            title='Reviewed Locations:',
+            width=1000,
+            height=700,
+            zoom=2
+        )
+
     recommendations(df=df2)
 
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
