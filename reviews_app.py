@@ -435,9 +435,9 @@ def is_valid_address(address):
 
 def lat(address):
     locate = geopy.Nominatim(user_agent="geoapiExercises")
-   #if is_valid_address(address): 
-    location = locate.geocode(address)
-    return location.latitude
+    if is_valid_address(address): 
+        location = locate.geocode(address)
+        return location.latitude
 
 def lon(address):
     locate = geopy.Nominatim(user_agent="geoapiExercises")
@@ -609,7 +609,7 @@ elif page == "Contribute Reviews":
 
     csv_file = "form_submission.csv"
 
-    reviews_form = st.form("your_reviews")
+    reviews_form = st.form("your_reviews", clear_on_submit=True, enter_to_submit=False)
 
     with reviews_form:
         st.subheader("Visit information")
@@ -727,7 +727,7 @@ elif page == "Contribute Reviews":
             index=None,
             placeholder="Please select an option..."
         )
-        submit_button = st.form_submit_button('Submit')
+        submit_button = st.form_submit_button('Submit', disabled=True, type='primary')
 
     if submit_button: 
         time = datetime.datetime.now().strftime("%m/%d/%Y")
@@ -761,6 +761,7 @@ elif page == "Contribute Reviews":
         updated_data.to_csv(csv_file, index=False)
         st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
 
+        
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
     # Map Visualization 
