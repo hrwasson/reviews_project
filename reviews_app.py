@@ -20,6 +20,7 @@ nltk.download('punkt')
 import datetime
 import geopy
 import re
+import usaddress
 
 st.set_page_config(layout="wide")
 
@@ -444,6 +445,17 @@ def lon(address):
         location = locate.geocode(address)
         return location.longitude
 
+def city(address): 
+    if is_valid_address(address=address): 
+        parsed = usaddress.parse(address)
+        city = [tag_value for tag, tag_value in parsed if tag == 'PlaceName'][0]
+        return city
+    
+def state(address): 
+    if is_valid_address(address=address): 
+        parsed = usaddress.parse(address)
+        state = [tag_value for tag, tag_value in parsed if tag == 'StateName'][0]
+        return state
 
 #def get_walking_distance(location1, location2): 
    # return haversine(location1, location2, unit=Unit.MILES)
@@ -984,6 +996,8 @@ elif page == "Your Recommendations":
     df2['Would go back?'] = df2['Would go back?'].apply(go_back)
     df2['Latitude'] = df2['Location'].apply(lat)
     df2['Longitude'] = df2['Location'].apply(lon)
+    df2['City'] = df2['Location'].apply(city)
+    df2['State'] = df2['Location'].apply(state)
 
     st.dataframe(df2)
 
