@@ -977,7 +977,7 @@ elif page == "Your Recommendations":
     df2['Overall Sentiment'] = df2['Overall Review'].apply(clean).apply(get_overall_sentiment)
     df2['Atmosphere'] = df2['Atmosphere'].apply(atmosphere)
     df2['Rating'] = df2['Rating'].apply(rating)
-    df2['Food Quality'] = df2['Food Quality'].apply(food_quality)
+    df2['Food quality'] = df2['Food quality'].apply(food_quality)
     df2['Service'] = df2['Service'].apply(service)
     df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
     df2['Would go back?'] = df2['Would go back?'].apply(go_back)
