@@ -457,6 +457,26 @@ def state(address):
         state = [tag_value for tag, tag_value in parsed if tag == 'StateName'][0]
         return state
 
+def spider_chart(df, attributes):
+    df = pd.DataFrame(df)
+    median_df = df.groupby('Category')[attributes].median().reset_index()
+    for _, row in median_df.iterrows(): 
+        
+        category = row['Category']
+
+        plot_data = pd.DataFrame(dict(
+        theta = attributes,
+        r = row[attributes].values()
+        ))
+
+        fig = px.line_polar(plot_data, r='r', theta='theta', color = category, line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
+                    template="plotly_dark")
+    
+    #fig.update_traces(fill='toself')
+
+    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
+
+    st.plotly_chart(fig, on_select=callable)
 #def get_walking_distance(location1, location2): 
    # return haversine(location1, location2, unit=Unit.MILES)
 
@@ -606,10 +626,9 @@ if page == "Home":
     
     data = pd.DataFrame(dict(
     r=[df['Atmosphere'].median(), df['Food quality'].median(), df['Service'].median(), df['Unique Aspects'].median()],
-    theta=['Atmosphere','Food Quality','Service', 'Unique Aspects'],
-    lines = [df['Category'].unique()]))
+    theta=['Atmosphere','Food Quality','Service', 'Unique Aspects']))
 
-    fig = px.line_polar(data, r='r', theta='theta', color='lines', line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
+    fig = px.line_polar(data, r='r', theta='theta', line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
                     template="plotly_dark")
     
     #fig.update_traces(fill='toself')
