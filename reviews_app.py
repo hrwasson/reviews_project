@@ -585,7 +585,6 @@ if page == "Home":
         attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
         spider_chart(df, attribute_list)
 
-
 elif page == "How did I collect the data?":
     st.title("Eats & Adventures Tracker - How did I collect the data?")
 
@@ -771,8 +770,12 @@ elif page == "Contribute Reviews":
         except FileNotFoundError: 
             updated_data=new_data
 
+
         updated_data.to_csv(csv_file, index=False)
         st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
+
+        with open(csv_file, 'w') as file:
+            pass  # This does nothing, but effectively clears the file
         
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
@@ -986,6 +989,7 @@ elif page == "Your Recommendations":
             lat='lat',
             lon='lon',
             hover_name='Name',
+            size = 5,
             color='Rating',  # Use the Rating column for color mapping
             color_continuous_scale='Purpor',
             mapbox_style='carto-positron',
