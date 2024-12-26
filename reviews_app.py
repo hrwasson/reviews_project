@@ -474,6 +474,26 @@ def spider_chart(df, attributes):
 
     st.plotly_chart(fig, on_select=callable)
 
+def clean_dataframe(df2): 
+    df2['Count of Reviews'] = 1
+    df2['Overall Review'] = df2['Positive Review'] + " " + df2['Negative Review']
+    df2['Rating'] = df2['Rating'].apply(rating)
+    df2['color'] = df2['Rating'].apply(get_color)
+    df2['size'] = df2['Rating'].apply(get_size)
+    df2['Rating'] = df2['Rating'].to_list()
+    df2['Overall Sentiment'] = df2['Overall Review'].apply(clean).apply(get_overall_sentiment)
+    df2['Atmosphere'] = df2['Atmosphere'].apply(atmosphere)
+    df2['Food quality'] = df2['Food quality'].apply(food_quality)
+    df2['Service'] = df2['Service'].apply(service)
+    df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
+    df2['Would go back?'] = df2['Would go back?'].apply(go_back)
+    df2['lat'] = df2['Location'].apply(lat)
+    df2['lon'] = df2['Location'].apply(lon)
+    df2['City'] = df2['Location'].apply(city)
+    df2['State'] = df2['Location'].apply(state)
+    df2['Price Range'] = df2['Price']
+    return df2
+
 df['color'] = df['Rating'].apply(get_color)
 df['size'] = df['Rating'].apply(get_size)
 df['Rating'] = df['Rating'].to_list()
@@ -512,7 +532,7 @@ st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
 
 if page == "Home":
-    st.title("Eats & Adventures Tracker - Home")
+    st.title("Eats & Adventures Tracker | Home")
 
     col1, col2 = st.columns(2)
 
@@ -572,7 +592,7 @@ if page == "Home":
         spider_chart(df, attribute_list)
 
 elif page == "How did I collect the data?":
-    st.title("Eats & Adventures Tracker - How did I collect the data?")
+    st.title("Eats & Adventures Tracker | How did I collect the data?")
 
     # Label field
     st.markdown(
@@ -594,7 +614,7 @@ elif page == "How did I collect the data?":
 
 elif page == "Contribute Reviews": 
 
-    st.title("Eats & Adventures Tracker - Contribute Reviews")
+    st.title("Eats & Adventures Tracker | Contribute Reviews")
     
     st.subheader('Please fill out the form with your reviews:')
 
@@ -760,7 +780,7 @@ elif page == "Contribute Reviews":
 
 elif page == "Data at a Glance":
 
-    st.title("Eats & Adventures Tracker - Data at a Glance")
+    st.title("Eats & Adventures Tracker | Data at a Glance")
     # Map Visualization 
 
     st.markdown("""
@@ -937,37 +957,18 @@ elif page == "Data at a Glance":
         st.plotly_chart(pie_chart4)
 
 elif page == "My Recommendations": 
-    st.title("Eats & Adventures Tracker - My Recommendations")
+    st.title("Eats & Adventures Tracker | My Recommendations")
     
     recommendations(df)
     
 elif page == "Your Recommendations": 
 
-    st.title("Eats & Adventures Tracker - Your Recommendations")
+    st.title("Eats & Adventures Tracker | Your Recommendations")
 
     #TODO: data frame formatting
     df2 = pd.read_csv("form_submission.csv")
 
-    df2['Count of Reviews'] = 1
-    df2['Overall Review'] = df2['Positive Review'] + " " + df2['Negative Review']
-    df2['Rating'] = df2['Rating'].apply(rating)
-    df2['color'] = df2['Rating'].apply(get_color)
-    df2['size'] = df2['Rating'].apply(get_size)
-    df2['Rating'] = df2['Rating'].to_list()
-    df2['Overall Sentiment'] = df2['Overall Review'].apply(clean).apply(get_overall_sentiment)
-    df2['Atmosphere'] = df2['Atmosphere'].apply(atmosphere)
-    df2['Food quality'] = df2['Food quality'].apply(food_quality)
-    df2['Service'] = df2['Service'].apply(service)
-    df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
-    df2['Would go back?'] = df2['Would go back?'].apply(go_back)
-    df2['lat'] = df2['Location'].apply(lat)
-    df2['lon'] = df2['Location'].apply(lon)
-    df2['City'] = df2['Location'].apply(city)
-    df2['State'] = df2['Location'].apply(state)
-    df2['Price Range'] = df2['Price']
-
-    st.dataframe(df2)
-
+    df2 = clean_dataframe(df2)
 
     df2_map = px.scatter_mapbox(
             df2,
@@ -991,5 +992,5 @@ elif page == "Your Recommendations":
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
 
 elif page == "Give me feedback": 
-    st.title("Eats & Adventures Tracker - Give me feedback")
+    st.title("Eats & Adventures Tracker | Give me feedback")
 
