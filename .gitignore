@@ -1,8 +1,1 @@
 secrets.toml
-*.jpg
-*.png
-review_model.py
-review_project.ipynb
-reviews_project.py
-reviews_sentiment.py
-test.py
