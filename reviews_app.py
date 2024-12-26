@@ -28,6 +28,7 @@ nltk.download('punkt')
 # TODO: 
 # - COMMENT CODE 
 # - VERIFY CONTRIBUTIONS FORM IS WORKING 
+# - WRAP PAGES IN A TRY EXCEPT
 
 # SETTING UP THE PAGE FOR THE STREAMLIT APP
 st.set_page_config(layout="wide")
@@ -538,430 +539,443 @@ st.sidebar.markdown(markdown, unsafe_allow_html=True)
 if page == "Home":
     st.title("Eats & Adventures Tracker | Home")
 
-    col1, col2 = st.columns(2)
+    try: 
+        col1, col2 = st.columns(2)
 
-    with col1: 
+        with col1: 
 
-        rtp_map = df[df['City'].isin(['Cary', 'Raleigh', 'Durham', 'Morrisville'])]
-        count_rtp = len(rtp_map)
-        reccomendation_map = px.scatter_mapbox(
-                        rtp_map,
-                        lat='lat',
-                        lon='lon',
-                        size='size',
-                        hover_name='Name',
-                        #color='Count of Reviews',  # Use the Rating column for color mapping
-                        #color_continuous_scale='Purpor',
-                        color_discrete_sequence=['purple'],
-                        mapbox_style='carto-positron',
-                        title=f'{count_rtp} Reviews in Raleigh/Durham/Chapel Hill',
-                        width=1000,
-                        height=500, 
-                        zoom = 8.5
-                    )
-        reccomendation_map.update_traces(
-                        hovertemplate="<b>%{hovertext}</b>"  # Only show the name
-                    )
-        st.plotly_chart(reccomendation_map)
+            rtp_map = df[df['City'].isin(['Cary', 'Raleigh', 'Durham', 'Morrisville'])]
+            count_rtp = len(rtp_map)
+            reccomendation_map = px.scatter_mapbox(
+                            rtp_map,
+                            lat='lat',
+                            lon='lon',
+                            size='size',
+                            hover_name='Name',
+                            #color='Count of Reviews',  # Use the Rating column for color mapping
+                            #color_continuous_scale='Purpor',
+                            color_discrete_sequence=['purple'],
+                            mapbox_style='carto-positron',
+                            title=f'{count_rtp} Reviews in Raleigh/Durham/Chapel Hill',
+                            width=1000,
+                            height=500, 
+                            zoom = 8.5
+                        )
+            reccomendation_map.update_traces(
+                            hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+                        )
+            st.plotly_chart(reccomendation_map)
 
-    with col2: 
+        with col2: 
 
-        dc_map = df[df['City'].isin(['Arlington', 'Washington, D.C.'])]
-        count_dc = len(dc_map)
-        reccomendation_map = px.scatter_mapbox(
-                        dc_map,
-                        lat='lat',
-                        lon='lon',
-                        size='size',
-                        hover_name='Name',
-                        #color='Count of Reviews',  # Use the Rating column for color mapping
-                        #color_continuous_scale='Purpor',
-                        color_discrete_sequence=['purple'],
-                        mapbox_style='carto-positron',
-                        title=f'{count_dc} Reviews in Arlington, VA and Washington, D.C.',
-                        width=1000,
-                        height=500, 
-                        zoom = 9
-                    )
-        reccomendation_map.update_traces(
-                        hovertemplate="<b>%{hovertext}</b>"  # Only show the name
-                    )
+            dc_map = df[df['City'].isin(['Arlington', 'Washington, D.C.'])]
+            count_dc = len(dc_map)
+            reccomendation_map = px.scatter_mapbox(
+                            dc_map,
+                            lat='lat',
+                            lon='lon',
+                            size='size',
+                            hover_name='Name',
+                            #color='Count of Reviews',  # Use the Rating column for color mapping
+                            #color_continuous_scale='Purpor',
+                            color_discrete_sequence=['purple'],
+                            mapbox_style='carto-positron',
+                            title=f'{count_dc} Reviews in Arlington, VA and Washington, D.C.',
+                            width=1000,
+                            height=500, 
+                            zoom = 9
+                        )
+            reccomendation_map.update_traces(
+                            hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+                        )
 
-        st.plotly_chart(reccomendation_map)
+            st.plotly_chart(reccomendation_map)
 
-    left, middle, right = st.columns((2, 7, 2))
+        left, middle, right = st.columns((2, 7, 2))
 
-    with middle:
-        attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
-        spider_chart(df, attribute_list)
+        with middle:
+            attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
+            spider_chart(df, attribute_list)
+    except:
+        st.write("Sorry this page is not availiable at the moment. ☹️ ")
 
 # DATA COLLECTION PAGE 📊
 elif page == "How did I collect the data?":
     st.title("Eats & Adventures Tracker | How did I collect the data?")
 
+    try:
     # Label field
-    st.markdown(
-        """
-        I've been collecting the data via a Google Form, reviewing on the following characteristics:
+        st.markdown(
+            """
+            I've been collecting the data via a Google Form, reviewing on the following characteristics:
 
-        - Visit Information: Date of Visit
-        - Location Details: Name, Category, Location, Latitude, Longitude, and Parking Ease and Types (e.g., Street Parking, Parking Lot).
-        - Visit Context: Season Visited, What I Got/Did.
-        - Ratings and Reviews: Overall Rating, Atmosphere, Food Quality, Service, Unique Aspects, Positive Review, Negative Review, and whether I would return to the place.
-        - Amenities: WiFi Availability, and Charging Outlets
-        - Cost: Price (e.g. $, $$, $$$, $$$$)    
+            - Visit Information: Date of Visit
+            - Location Details: Name, Category, Location, Latitude, Longitude, and Parking Ease and Types (e.g., Street Parking, Parking Lot).
+            - Visit Context: Season Visited, What I Got/Did.
+            - Ratings and Reviews: Overall Rating, Atmosphere, Food Quality, Service, Unique Aspects, Positive Review, Negative Review, and whether I would return to the place.
+            - Amenities: WiFi Availability, and Charging Outlets
+            - Cost: Price (e.g. $, $$, $$$, $$$$)    
 
-        """
-    )
+            """
+        )
 
-    # Add the Google Form image
-    st.image("datacollection.png")
+        # Add the Google Form image
+        st.image("datacollection.png")
+
+    except: 
+       st.write("Sorry this page is not availiable at the moment. ☹️ ")
 
 # PUBLIC REVIEW CONTRIBUTION FORM PAGE 📢
 elif page == "Contribute Reviews": 
 
     st.title("Eats & Adventures Tracker | Contribute Reviews")
     
-    st.subheader('Please fill out the form with your reviews:')
+    try: 
+        st.subheader('Please fill out the form with your reviews:')
 
-    csv_file = "form_submission.csv"
+        csv_file = "form_submission.csv"
 
-    reviews_form = st.form("your_reviews", clear_on_submit=False, enter_to_submit=False)
+        reviews_form = st.form("your_reviews", clear_on_submit=False, enter_to_submit=False)
 
-    with reviews_form:
-        st.subheader("Visit information")
+        with reviews_form:
+            st.subheader("Visit information")
 
-        name = st.text_input('What is the name of the location?',
-                              placeholder="Please fill in the official name of the location...")
-        
-        address = st.text_input('Where is it located?',
-                                placeholder="e.g., 123 Main Street, City, State, ZIP")
-        
-        category  = st.selectbox(
-            "What category does this location fall in?",
-            ("Coffee Shop", "Restaurant", "Bar", "Dessert", 
-             "Fast Food", "Diner", "Bakery", "Park", "Museum", 
-             "Outdoor Activity", "Indoor Activity", "Uber Eats", 
-             "Door Dash", "Brewery"),
-            index=None,
-            placeholder="Select a category...",
-        )
-        season = st.selectbox("What season did you visit in?", 
-                                ("Summer", "Fall", "Winter", "Spring"),
-                                index=None,
-                                placeholder='Please select a season')
-        
-        order = st.text_area("What did you do or order at the location? If you did not order anything please leave blank.",
-                             placeholder='Please fill in the box...')
+            name = st.text_input('What is the name of the location?',
+                                placeholder="Please fill in the official name of the location...")
+            
+            address = st.text_input('Where is it located?',
+                                    placeholder="e.g., 123 Main Street, City, State, ZIP")
+            
+            category  = st.selectbox(
+                "What category does this location fall in?",
+                ("Coffee Shop", "Restaurant", "Bar", "Dessert", 
+                "Fast Food", "Diner", "Bakery", "Park", "Museum", 
+                "Outdoor Activity", "Indoor Activity", "Uber Eats", 
+                "Door Dash", "Brewery"),
+                index=None,
+                placeholder="Select a category...",
+            )
+            season = st.selectbox("What season did you visit in?", 
+                                    ("Summer", "Fall", "Winter", "Spring"),
+                                    index=None,
+                                    placeholder='Please select a season')
+            
+            order = st.text_area("What did you do or order at the location? If you did not order anything please leave blank.",
+                                placeholder='Please fill in the box...')
 
-        st.subheader("Rating information")
+            st.subheader("Rating information")
 
-        r = st.selectbox(
-            "What is your overall rating of this location?",
-            options = ['Not for me', 'Fair', 'Okay but not great', 'Really good', 'Best place ever!'], 
-            index=None,
-            placeholder='Please select your overall rating...'
-        )
-        p = st.selectbox(
-            "What is the price range?",
-            options = ['$', '$$', '$$$', '$$$$'], 
-            index=None, 
-            placeholder="Please fill select the price range..."
-        )
-        a = st.selectbox(
-            "What is your rating on the atmosphere? This should reflect your opinion on the overall comfort and mood of the space.",
-            options = ['Uninviting', 'Not my vibe', 'Decent', 'Almost perfect', 'Amazing'], 
-            index=None, 
-            placeholder="Please select your rating of the atmosphere..."
-        )
-        f = st.selectbox(
-            "What is your rating on the food quality? This should reflect your opinion on the overall enjoyment of the food you ordered. Feel free to skip if you did not order food! ",
-            options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
-             index=None, 
-            placeholder="Please select your rating of the food quality..."
-        )
+            r = st.selectbox(
+                "What is your overall rating of this location?",
+                options = ['Not for me', 'Fair', 'Okay but not great', 'Really good', 'Best place ever!'], 
+                index=None,
+                placeholder='Please select your overall rating...'
+            )
+            p = st.selectbox(
+                "What is the price range?",
+                options = ['$', '$$', '$$$', '$$$$'], 
+                index=None, 
+                placeholder="Please fill select the price range..."
+            )
+            a = st.selectbox(
+                "What is your rating on the atmosphere? This should reflect your opinion on the overall comfort and mood of the space.",
+                options = ['Uninviting', 'Not my vibe', 'Decent', 'Almost perfect', 'Amazing'], 
+                index=None, 
+                placeholder="Please select your rating of the atmosphere..."
+            )
+            f = st.selectbox(
+                "What is your rating on the food quality? This should reflect your opinion on the overall enjoyment of the food you ordered. Feel free to skip if you did not order food! ",
+                options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
+                index=None, 
+                placeholder="Please select your rating of the food quality..."
+            )
 
-        s = st.selectbox(
-            "What is your rating on the service? ",
-            options = ['Just okay', 'Could be better', 'Meets expectations', 'Very friendly', 'Super Kind'], 
-            index=None, 
-            placeholder="Please select your rating of the food quality..."
-        )
+            s = st.selectbox(
+                "What is your rating on the service? ",
+                options = ['Just okay', 'Could be better', 'Meets expectations', 'Very friendly', 'Super Kind'], 
+                index=None, 
+                placeholder="Please select your rating of the food quality..."
+            )
 
-        u = st.selectbox(
-            "What is your rating on the unique aspects? This should reflect your opinion on the decor, stand out features, unique offers, etc.",
-            options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
-            index=None, 
-            placeholder="Please select your rating of unique aspects..."
-        )
+            u = st.selectbox(
+                "What is your rating on the unique aspects? This should reflect your opinion on the decor, stand out features, unique offers, etc.",
+                options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
+                index=None, 
+                placeholder="Please select your rating of unique aspects..."
+            )
 
-        positive_review = st.text_area('Please give a positive review about the location:',
-                                       placeholder='Please fill in your positive review...')
-        
-        negative_review = st.text_area("Please give a negative review about the location:",
-                                       placeholder="Please fill in your negative review...")
-        would_go_back = st.selectbox(
-            "Would you go back?",
-            options=["Definitely Not", "Probably Not", "Maybe", "Probably Yes", "Absolutely"],
-            index=None,
-            placeholder="Please select an option...")
+            positive_review = st.text_area('Please give a positive review about the location:',
+                                        placeholder='Please fill in your positive review...')
+            
+            negative_review = st.text_area("Please give a negative review about the location:",
+                                        placeholder="Please fill in your negative review...")
+            would_go_back = st.selectbox(
+                "Would you go back?",
+                options=["Definitely Not", "Probably Not", "Maybe", "Probably Yes", "Absolutely"],
+                index=None,
+                placeholder="Please select an option...")
 
-        st.subheader('Accessbility')
+            st.subheader('Accessbility')
 
-        parking_ease = st.selectbox(
-            "What was your experience getting to the location?",
-            options = ['Parked 20 blocks away', 'Kept circling to find a spot', 'It was manageable', 'Plenty of spaces close by', 'So easy and stress-free'], 
-            index=None, 
-            placeholder="Please select an option that best reflects your experience..."
-        )
+            parking_ease = st.selectbox(
+                "What was your experience getting to the location?",
+                options = ['Parked 20 blocks away', 'Kept circling to find a spot', 'It was manageable', 'Plenty of spaces close by', 'So easy and stress-free'], 
+                index=None, 
+                placeholder="Please select an option that best reflects your experience..."
+            )
 
-        parkingtype1 = st.selectbox(
-            "What was your primary parking type?",
-            options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro'],
-            index=None, 
-            placeholder="Please select your primary parking type..."
-        )
+            parkingtype1 = st.selectbox(
+                "What was your primary parking type?",
+                options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro'],
+                index=None, 
+                placeholder="Please select your primary parking type..."
+            )
 
-        parkingtype2 = st.selectbox(
-            "What was your secondary parking type?",
-            options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro', 'None'],
-            index=None, 
-            placeholder="Please select your secondary parking type..."
-        )
+            parkingtype2 = st.selectbox(
+                "What was your secondary parking type?",
+                options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro', 'None'],
+                index=None, 
+                placeholder="Please select your secondary parking type..."
+            )
 
-        st.subheader("Techical Compatibilty")
+            st.subheader("Techical Compatibilty")
 
-        wifi_select = st.selectbox(
-            'Did the location offer free wifi?',
-            options=['Yes', 'No', 'Not Sure'],
-            index=None,
-            placeholder="Please select an option..."
-        )
+            wifi_select = st.selectbox(
+                'Did the location offer free wifi?',
+                options=['Yes', 'No', 'Not Sure'],
+                index=None,
+                placeholder="Please select an option..."
+            )
 
-        charging_select = st.selectbox(
-            'Did the location offer charging outlets?',
-            options=['Yes', 'No', 'Not Sure'],
-            index=None,
-            placeholder="Please select an option..."
-        )
-        
-        submit_button = st.form_submit_button('Submit Form', type='primary')
+            charging_select = st.selectbox(
+                'Did the location offer charging outlets?',
+                options=['Yes', 'No', 'Not Sure'],
+                index=None,
+                placeholder="Please select an option..."
+            )
+            
+            submit_button = st.form_submit_button('Submit Form', type='primary')
 
-    if submit_button: 
-        time = datetime.datetime.now().strftime("%m/%d/%Y")
-        new_data = pd.DataFrame({
-            "Timestamp" : [time], 
-            "Name" : [name],
-            "Location": [address],
-            "Category": [category],
-            "Season Visited": [season], 
-            "What I got/did" : [order],
-            "Rating": [r], 
-            "Price": [p],
-            "Atmosphere": [a], 
-            "Food quality": [f],
-            "Service":[s],
-            "Unique Aspects": [u], 
-            "Positive Review": [positive_review], 
-            "Negative Review": [negative_review],
-            "Would go back?": [would_go_back], 
-            "Parking": [parking_ease],
-            "WiFi": [wifi_select], 
-            "Charging Outlets": [charging_select]
-        })
+        if submit_button: 
+            time = datetime.datetime.now().strftime("%m/%d/%Y")
+            new_data = pd.DataFrame({
+                "Timestamp" : [time], 
+                "Name" : [name],
+                "Location": [address],
+                "Category": [category],
+                "Season Visited": [season], 
+                "What I got/did" : [order],
+                "Rating": [r], 
+                "Price": [p],
+                "Atmosphere": [a], 
+                "Food quality": [f],
+                "Service":[s],
+                "Unique Aspects": [u], 
+                "Positive Review": [positive_review], 
+                "Negative Review": [negative_review],
+                "Would go back?": [would_go_back], 
+                "Parking": [parking_ease],
+                "WiFi": [wifi_select], 
+                "Charging Outlets": [charging_select]
+            })
 
-        if os.path.exists(csv_file) and os.path.getsize(csv_file) > 0:
+            if os.path.exists(csv_file) and os.path.getsize(csv_file) > 0:
 
-            try:
-                existing_data = pd.read_csv(csv_file)
-                updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-            except pd.errors.EmptyDataError:
+                try:
+                    existing_data = pd.read_csv(csv_file)
+                    updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+                except pd.errors.EmptyDataError:
+                    updated_data = new_data
+            else:
                 updated_data = new_data
-        else:
-            updated_data = new_data
 
 
-        updated_data.to_csv(csv_file, index=False)
-        st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
+            updated_data.to_csv(csv_file, index=False)
+            st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
+        
+    except: 
+        st.write("Sorry this page is not availiable at the moment. ☹️ ")
 
 # DATA AT A GLANCE PAGE 📈
 elif page == "Data at a Glance":
 
     st.title("Eats & Adventures Tracker | Data at a Glance")
-    # Map Visualization 
 
-    st.markdown("""
-    <style>
-    span[data-baseweb="tag"] {
-    color: black;
-    background-color: white
-    }
-    <style>
-    """, unsafe_allow_html=True)
+    try: 
+        st.markdown("""
+        <style>
+        span[data-baseweb="tag"] {
+        color: black;
+        background-color: white
+        }
+        <style>
+        """, unsafe_allow_html=True)
 
-    selected_category = st.multiselect(
-        label="Select a Category", 
-        options=df['Category'].unique(),
-        placeholder="Select a Category"
-    )
-
-    if selected_category:
-        filtered_states = df[df['Category'].isin(selected_category)]['State'].unique()
-    else: 
-        filtered_states = []
-
-    selected_state = st.multiselect(
-        label="Select a State/Territory", 
-        options=filtered_states,
-        placeholder="Select a State"
-    )
-
-    if selected_state:
-        filtered_cities = df[df['Category'].isin(selected_category) & df['State'].isin(selected_state)]['City'].unique()
-    else: 
-        filtered_cities = []
-
-    selected_city = st.multiselect(
-            label="Select a City/Territory", 
-            options= filtered_cities,
-            placeholder="Select a City"
+        selected_category = st.multiselect(
+            label="Select a Category", 
+            options=df['Category'].unique(),
+            placeholder="Select a Category"
         )
 
-    st.header("Map of Reviewed Locations")
+        if selected_category:
+            filtered_states = df[df['Category'].isin(selected_category)]['State'].unique()
+        else: 
+            filtered_states = []
 
-    if selected_state or selected_city or selected_category:
-
-        filtered_df = df
-
-        if selected_state: filtered_df = filtered_df[(filtered_df['State'].isin(selected_state))]
-        if selected_city: filtered_df = filtered_df[(filtered_df['City'].isin(selected_city))]
-        if selected_category: filtered_df = filtered_df[(filtered_df['Category'].isin(selected_category))]
-
-        map_fig = px.scatter_mapbox(
-            filtered_df,
-            lat='lat',
-            lon='lon',
-            size='size',
-            hover_name='Name',
-            color='Rating',  # Use the Rating column for color mapping
-            color_continuous_scale='Purpor',
-            mapbox_style='carto-positron',
-            title='Reviewed Locations:',
-            width=1000,
-            height=700,
-            zoom=5
+        selected_state = st.multiselect(
+            label="Select a State/Territory", 
+            options=filtered_states,
+            placeholder="Select a State"
         )
 
-        map_fig.update_traces(
-        hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+        if selected_state:
+            filtered_cities = df[df['Category'].isin(selected_category) & df['State'].isin(selected_state)]['City'].unique()
+        else: 
+            filtered_cities = []
+
+        selected_city = st.multiselect(
+                label="Select a City/Territory", 
+                options= filtered_cities,
+                placeholder="Select a City"
+            )
+
+        st.header("Map of Reviewed Locations")
+
+        if selected_state or selected_city or selected_category:
+
+            filtered_df = df
+
+            if selected_state: filtered_df = filtered_df[(filtered_df['State'].isin(selected_state))]
+            if selected_city: filtered_df = filtered_df[(filtered_df['City'].isin(selected_city))]
+            if selected_category: filtered_df = filtered_df[(filtered_df['Category'].isin(selected_category))]
+
+            map_fig = px.scatter_mapbox(
+                filtered_df,
+                lat='lat',
+                lon='lon',
+                size='size',
+                hover_name='Name',
+                color='Rating',  # Use the Rating column for color mapping
+                color_continuous_scale='Purpor',
+                mapbox_style='carto-positron',
+                title='Reviewed Locations:',
+                width=1000,
+                height=700,
+                zoom=5
+            )
+
+            map_fig.update_traces(
+            hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+            )
+
+            st.plotly_chart(map_fig)
+
+        else:
+            full_map = px.scatter_mapbox(
+                df,
+                lat='lat',
+                lon='lon',
+                size='size',
+                hover_name='Name',
+                color='Rating',  # Use the Rating column for color mapping
+                color_continuous_scale='Purpor',
+                mapbox_style='carto-positron',
+                title='Reviewed Locations:',
+                width=1000,
+                height=700, 
+                zoom = 5
+            )
+            full_map.update_traces(
+            hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+            )
+            st.plotly_chart(full_map)
+
+        # Reviews Over Time
+
+        st.header("Reviews Over Time")
+
+        df_group = df.groupby('Timestamp')['Count of Reviews'].sum().reset_index()
+        df_group2 = df.groupby('Timestamp')['Rating'].median().reset_index()
+        df_group['Median Rating'] = df_group2['Rating']
+
+        time_bar = px.bar(
+            df_group, 
+            x = 'Timestamp',
+            y = 'Count of Reviews', 
+            color = 'Median Rating', 
+            color_continuous_scale= 'Purpor', 
+            width=1000, 
+            height = 300, 
+            hover_name='Count of Reviews'
+        )  
+
+        time_bar.update_traces(
+        hovertemplate="<b>%{hovertext}</b>"  
         )
 
-        st.plotly_chart(map_fig)
-
-    else:
-        full_map = px.scatter_mapbox(
-            df,
-            lat='lat',
-            lon='lon',
-            size='size',
-            hover_name='Name',
-            color='Rating',  # Use the Rating column for color mapping
-            color_continuous_scale='Purpor',
-            mapbox_style='carto-positron',
-            title='Reviewed Locations:',
-            width=1000,
-            height=700, 
-            zoom = 5
+        time_bar.update_layout(
+        title="Count of Reviews Over Time",
+        xaxis_title="Date",
+        yaxis_title="Count of Reviews"
         )
-        full_map.update_traces(
-        hovertemplate="<b>%{hovertext}</b>"  # Only show the name
+
+        st.plotly_chart(time_bar)
+
+        st.markdown(
+            """
+            Note: You may notice a high count of reviews in the begining of the bar chart around 11/11 and 11/12. After collecting using a notesheet over the summer, I transitioned into a more uniformed process starting in Novemember, hence the large spike in the bar plot. 
+            """
         )
-        st.plotly_chart(full_map)
 
-    # Reviews Over Time
+        st.markdown(
+            'The following pie chart shows the percentage of categories represented in the reviews.'
+        )
+        
+        pie_col1, pie_col2 = st.columns(2)
 
-    st.header("Reviews Over Time")
+        with pie_col1: 
+            df_pie = df.groupby('Category')['Count of Reviews'].sum().reset_index()
+            df_pie['Count of Reviews'] = df_pie['Count of Reviews']/100
+            df_pie = df_pie.sort_values(by='Category', ascending=True)
+            pie_chart = px.pie(df_pie, names = 'Category', values='Count of Reviews', 
+                                title='Percentage of Categories Represented in Reviews',
+                                color_discrete_sequence=px.colors.sequential.Sunsetdark, 
+        )
+            st.plotly_chart(pie_chart)
 
-    df_group = df.groupby('Timestamp')['Count of Reviews'].sum().reset_index()
-    df_group2 = df.groupby('Timestamp')['Rating'].median().reset_index()
-    df_group['Median Rating'] = df_group2['Rating']
+        with pie_col2: 
+            cat_rating_bar = df.groupby('Category')['Rating'].median().reset_index()
+            cat_rating_bar = cat_rating_bar.sort_values(by='Rating', ascending=True)
+            bar_chart = px.bar(cat_rating_bar, x='Category', y='Rating', title='Median Rating Across Categories', color_discrete_sequence=px.colors.sequential.PuBu)
+            st.plotly_chart(bar_chart)
 
-    time_bar = px.bar(
-        df_group, 
-        x = 'Timestamp',
-        y = 'Count of Reviews', 
-        color = 'Median Rating', 
-        color_continuous_scale= 'Purpor', 
-        width=1000, 
-        height = 300, 
-        hover_name='Count of Reviews'
-    )  
+        pie_col3, pie_col4 = st.columns(2)
 
-    time_bar.update_traces(
-    hovertemplate="<b>%{hovertext}</b>"  
-    )
+        with pie_col3: 
 
-    time_bar.update_layout(
-    title="Count of Reviews Over Time",
-    xaxis_title="Date",
-    yaxis_title="Count of Reviews"
-    )
-
-    st.plotly_chart(time_bar)
-
-    st.markdown(
-        """
-        Note: You may notice a high count of reviews in the begining of the bar chart around 11/11 and 11/12. After collecting using a notesheet over the summer, I transitioned into a more uniformed process starting in Novemember, hence the large spike in the bar plot. 
-        """
-    )
-
-    st.markdown(
-        'The following pie chart shows the percentage of categories represented in the reviews.'
-    )
-    
-    pie_col1, pie_col2 = st.columns(2)
-
-    with pie_col1: 
-        df_pie = df.groupby('Category')['Count of Reviews'].sum().reset_index()
-        df_pie['Count of Reviews'] = df_pie['Count of Reviews']/100
-        df_pie = df_pie.sort_values(by='Category', ascending=True)
-        pie_chart = px.pie(df_pie, names = 'Category', values='Count of Reviews', 
-                            title='Percentage of Categories Represented in Reviews',
-                            color_discrete_sequence=px.colors.sequential.Sunsetdark, 
-    )
-        st.plotly_chart(pie_chart)
-
-    with pie_col2: 
-        cat_rating_bar = df.groupby('Category')['Rating'].median().reset_index()
-        cat_rating_bar = cat_rating_bar.sort_values(by='Rating', ascending=True)
-        bar_chart = px.bar(cat_rating_bar, x='Category', y='Rating', title='Median Rating Across Categories', color_discrete_sequence=px.colors.sequential.PuBu)
-        st.plotly_chart(bar_chart)
-
-    pie_col3, pie_col4 = st.columns(2)
-
-    with pie_col3: 
-
-        pie_chart3 = df.groupby('Parking Type 1')['Count of Reviews'].sum().reset_index()
-        pie_chart3['Count of Reviews'] = pie_chart3['Count of Reviews']/100
-        pie_chart3 = pie_chart3.sort_values(by='Parking Type 1', ascending=False)
-        pie_chart3 = px.pie(pie_chart3, names = 'Parking Type 1', values='Count of Reviews', 
-                            title='Primary Parking Type Represented in Dataset', 
-                            color_discrete_sequence=px.colors.sequential.Purples[2:]
-    )
-        st.plotly_chart(pie_chart3)
+            pie_chart3 = df.groupby('Parking Type 1')['Count of Reviews'].sum().reset_index()
+            pie_chart3['Count of Reviews'] = pie_chart3['Count of Reviews']/100
+            pie_chart3 = pie_chart3.sort_values(by='Parking Type 1', ascending=False)
+            pie_chart3 = px.pie(pie_chart3, names = 'Parking Type 1', values='Count of Reviews', 
+                                title='Primary Parking Type Represented in Dataset', 
+                                color_discrete_sequence=px.colors.sequential.Purples[2:]
+        )
+            st.plotly_chart(pie_chart3)
 
 
 
-    with pie_col4: 
-        pie_chart4 = df.groupby('Parking Type 2')['Count of Reviews'].sum().reset_index()
-        pie_chart4['Count of Reviews'] = pie_chart4['Count of Reviews']/100
-        pie_chart4 = pie_chart4.sort_values(by='Parking Type 2', ascending=False)
-        pie_chart4 = px.pie(pie_chart4, names = 'Parking Type 2', values='Count of Reviews', 
-                            title='Secondary Parking Type Represented in Dataset',
-                            color_discrete_sequence=px.colors.sequential.Purpor[:10]
+        with pie_col4: 
+            pie_chart4 = df.groupby('Parking Type 2')['Count of Reviews'].sum().reset_index()
+            pie_chart4['Count of Reviews'] = pie_chart4['Count of Reviews']/100
+            pie_chart4 = pie_chart4.sort_values(by='Parking Type 2', ascending=False)
+            pie_chart4 = px.pie(pie_chart4, names = 'Parking Type 2', values='Count of Reviews', 
+                                title='Secondary Parking Type Represented in Dataset',
+                                color_discrete_sequence=px.colors.sequential.Purpor[:10]
 
-    )
-        st.plotly_chart(pie_chart4)
+        )
+            st.plotly_chart(pie_chart4)
+    except: 
+        st.write("Sorry this page is not availiable at the moment. ☹️ ")
 
 # MY RECOMMENDATIONS 🍜
 elif page == "My Recommendations": 
@@ -1009,6 +1023,5 @@ elif page == "Give me feedback":
     # THIS PAGE WILL HAVE  A CONTACT ME PAGE AND AN EMAIL FORWARDING FORM
     st.title("Eats & Adventures Tracker | Give me feedback")
     
-
 #END STREAMLIT APP DEV
 #********************************************************************************************************************************************
