@@ -22,7 +22,6 @@ import geopy
 import re
 import usaddress
 import os
-import time
 
 st.set_page_config(layout="wide")
 
@@ -772,8 +771,7 @@ elif page == "Contribute Reviews":
 
 
         updated_data.to_csv(csv_file, index=False)
-        current_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        st.success(f"Thank you for contributing to this project! Your review was submitted on {current_time}", icon="✅")
+        st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
 
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
