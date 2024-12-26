@@ -31,6 +31,7 @@ nltk.download('punkt')
 # - WRAP THE LAST PAGE IN A TRY CATCH
 # - RECOMMENDATIONS PAGE: MAKE SURE THAT THE REVIEWS WITH THE SAME NAME ARE AVERAGED - USING A GROUP BY 
 # - RECOMMENDATIONS PAGE: THE BIGGER THE CIRCLE AT THE PLACE THE MORE REVIEWS THERE ARE THERE
+# - ADD A SECTION ABOUT CONTRIBUTING REVIEWS
 
 # SETTING UP THE PAGE FOR THE STREAMLIT APP
 st.set_page_config(layout="wide")
@@ -996,9 +997,11 @@ elif page == "Your Recommendations":
         df2 = pd.read_csv("form_submission.csv")
 
         df2 = clean_dataframe(df2)
+        
+        df2_map_df = df2.groupby('Name')['lat', 'lon', 'size', 'Rating'].mean()
 
         df2_map = px.scatter_mapbox(
-                df2,
+                df2_map_df,
                 lat='lat',
                 lon='lon',
                 hover_name='Name',
@@ -1015,6 +1018,7 @@ elif page == "Your Recommendations":
         st.plotly_chart(df2_map)
 
         recommendations(df=df2)
+
     except: 
         st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
