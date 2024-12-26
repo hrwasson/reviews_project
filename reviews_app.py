@@ -471,58 +471,11 @@ def spider_chart(df, attributes):
 
     st.plotly_chart(fig, on_select=callable)
 
-
-#def get_walking_distance(location1, location2): 
-   # return haversine(location1, location2, unit=Unit.MILES)
-
 df['color'] = df['Rating'].apply(get_color)
 df['size'] = df['Rating'].apply(get_size)
 df['Rating'] = df['Rating'].to_list()
 df['Price Range'] = df['Price'].apply(get_price)
 df['Overall Sentiment'] = df['Overall Review'].apply(clean).apply(get_overall_sentiment)
-
-# data = df
-
-# data['LatLon'] = None
-
-# data['LatLon'] = data['LatLon'] = data.apply(
-#     lambda row: format_lat_long(name=row['Name'], lat=row['lat'], lon=row['lon']) if not pd.isna(row['lat']) and not pd.isna(row['lon']) else None,
-#     axis=1
-# )
-
-# graph = nx.Graph()
-
-# locations = data['LatLon'].to_list()
-# locations = [loc for loc in data['LatLon'] if loc is not None]
-
-
-# print(data['LatLon'].head())  # Check the format of LatLon
-# print(data['LatLon'].apply(type).value_counts())  # Ensure all values are tuples
-
-# for name, coordinates in locations: 
-#     graph.add_node(name, pos = coordinates)
-
-# for i in range(len(locations)):
-
-#     for j in range(i+1, len(locations)):
-
-#         loc1 = locations[i][1]
-
-#         loc2 = locations[j][1]
-
-#         distance = geopy.distance.distance(loc1, loc2).mi
-
-#         graph.add_edge(locations[i][0], locations[j][0], weight=distance)
-
-# nx.draw(graph, nx.get_node_attributes(graph, 'pos'), with_labels=True, labels=graph.nodes) 
-
-# nx.draw_networkx_edge_labels(graph, nx.get_node_attributes(graph, 'pos'), edge_labels=nx.get_edge_attributes(graph, 'weight')) 
-
-#print(graph.edges(data=True))
-
-#dist = nx.shortest_path_length(graph, source='Clouds Brewcade + Kitchen', target='Downtown Cary Park', weight='weight')
-#print(f"The distance between A and D is {dist} units.")
-
 
 #********************************************************************************************************************************************
 # creating the streamlit app: 
@@ -530,6 +483,7 @@ df['Overall Sentiment'] = df['Overall Review'].apply(clean).apply(get_overall_se
 #  setting page configuration 
 
 # putting my picture on the sidebar
+
 logo = "hannah.jpg"
 st.sidebar.image(logo)
 
@@ -619,8 +573,11 @@ if page == "Home":
 
         st.plotly_chart(reccomendation_map)
 
-    attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
-    spider_chart(df, attribute_list)
+    left, middle, right = st.columns((2, 5, 2))
+
+    with middle:
+        attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
+        spider_chart(df, attribute_list)
 
 
 elif page == "How did I collect the data?":
