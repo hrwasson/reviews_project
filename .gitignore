@@ -1,4 +1,3 @@
-secrets.toml
 *.jpg
 *.png
 review_model.py
