@@ -460,21 +460,14 @@ def state(address):
 def spider_chart(df, attributes):
     df = pd.DataFrame(df)
     median_df = df.groupby('Category')[attributes].median().reset_index()
-    for _, row in median_df.iterrows(): 
-
-        category = row['Category']
-
-        plot_data = pd.DataFrame(dict(
-        theta = attributes,
-        r = row[attributes].values()
-        ))
-
-        fig = px.line_polar(plot_data, r='r', theta='theta', color = category, line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
-                    template="plotly_dark")
     
-    #fig.update_traces(fill='toself')
-
-    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
+    radar_data = pd.melt(median_df, id_vars='Category', 
+                         var_name='theta', value_name='r')
+    
+    fig = px.line_polar(radar_data, r='r', theta='theta', color = 'Category', line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
+                template="plotly_dark")
+    
+    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=True)
 
     st.plotly_chart(fig, on_select=callable)
 
@@ -628,7 +621,7 @@ if page == "Home":
 
         attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
         spider_chart(df, attribute_list)
-        
+
 
 elif page == "How did I collect the data?":
     st.title("Eats & Adventures Tracker - How did I collect the data?")
