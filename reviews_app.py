@@ -430,14 +430,16 @@ def recommendations(df):
         st.write("No locations match your selected amenities. Please try a different option.")
 
 def lat(address):
-    locate = geopy.Nominatim(user_agent="Geopy Library")
-    location = locate.geocode(address)
-    return location.latitude
+    if address is not None:
+        locate = geopy.Nominatim(user_agent="Geopy Library")
+        location = locate.geocode(address)
+        return location.latitude
 
 def lon(address):
-    locate = geopy.Nominatim(user_agent="Geopy Library")
-    location = locate.geocode(address)
-    return location.longitude
+    if address is not None:
+        locate = geopy.Nominatim(user_agent="Geopy Library")
+        location = locate.geocode(address)
+        return location.longitude
 
 def city(address):
     parsed = usaddress.parse(address)
