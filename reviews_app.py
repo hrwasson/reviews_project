@@ -614,7 +614,7 @@ elif page == "Contribute Reviews":
 
     csv_file = "form_submission.csv"
 
-    reviews_form = st.form("your_reviews", clear_on_submit=True, enter_to_submit=False)
+    reviews_form = st.form("your_reviews", clear_on_submit=False, enter_to_submit=False)
 
     with reviews_form:
         st.subheader("Visit information")
@@ -654,7 +654,7 @@ elif page == "Contribute Reviews":
             "What is the price range?",
             options = ['$', '$$', '$$$', '$$$$'], 
             index=None, 
-            placeholder="Please fill select the price range."
+            placeholder="Please fill select the price range..."
         )
         a = st.selectbox(
             "What is your rating on the atmosphere? This should reflect your opinion on the overall comfort and mood of the space.",
@@ -770,11 +770,9 @@ elif page == "Contribute Reviews":
         except FileNotFoundError: 
             updated_data=new_data
 
-
         updated_data.to_csv(csv_file, index=False)
         st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
 
-        
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
     # Map Visualization 
