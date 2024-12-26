@@ -28,7 +28,9 @@ nltk.download('punkt')
 # TODO: 
 # - COMMENT CODE 
 # - VERIFY CONTRIBUTIONS FORM IS WORKING 
-# - WRAP PAGES IN A TRY EXCEPT
+# - WRAP THE LAST PAGE IN A TRY CATCH
+# - RECOMMENDATIONS PAGE: MAKE SURE THAT THE REVIEWS WITH THE SAME NAME ARE AVERAGED - USING A GROUP BY 
+# - RECOMMENDATIONS PAGE: THE BIGGER THE CIRCLE AT THE PLACE THE MORE REVIEWS THERE ARE THERE
 
 # SETTING UP THE PAGE FOR THE STREAMLIT APP
 st.set_page_config(layout="wide")
@@ -430,7 +432,7 @@ def recommendations(df):
                 )
                 st.plotly_chart(reccomendation_map)
             else: 
-                st.write('Sorry there are no further recommendations. Please check back again soon. :)')
+                st.write('Sorry, there are no further recommendations. Please check back again soon. 🙂')
 
     else:
         st.write("No locations match your selected amenities. Please try a different option.")
@@ -597,7 +599,7 @@ if page == "Home":
             attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
             spider_chart(df, attribute_list)
     except:
-        st.write("Sorry this page is not availiable at the moment. ☹️ ")
+        st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
 # DATA COLLECTION PAGE 📊
 elif page == "How did I collect the data?":
@@ -623,7 +625,7 @@ elif page == "How did I collect the data?":
         st.image("datacollection.png")
 
     except: 
-       st.write("Sorry this page is not availiable at the moment. ☹️ ")
+       st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
 # PUBLIC REVIEW CONTRIBUTION FORM PAGE 📢
 elif page == "Contribute Reviews": 
@@ -794,7 +796,7 @@ elif page == "Contribute Reviews":
             st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
         
     except: 
-        st.write("Sorry this page is not availiable at the moment. ☹️ ")
+        st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
 # DATA AT A GLANCE PAGE 📈
 elif page == "Data at a Glance":
@@ -975,7 +977,7 @@ elif page == "Data at a Glance":
         )
             st.plotly_chart(pie_chart4)
     except: 
-        st.write("Sorry this page is not availiable at the moment. ☹️ ")
+        st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
 # MY RECOMMENDATIONS 🍜
 elif page == "My Recommendations": 
@@ -983,7 +985,7 @@ elif page == "My Recommendations":
     try: 
         recommendations(df)
     except: 
-        st.write("Sorry this page is not availiable at the moment. ☹️ ")
+        st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
 # YOUR RECOMMENDATIONS PAGE🍕
 elif page == "Your Recommendations": 
@@ -1014,7 +1016,7 @@ elif page == "Your Recommendations":
 
         recommendations(df=df2)
     except: 
-        st.write("Sorry this page is not availiable at the moment. ☹️ ")
+        st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
 
