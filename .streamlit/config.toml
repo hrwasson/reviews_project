@@ -2,7 +2,7 @@
 enableStaticServing = true
 
 [theme]
-backgroundColor = "black"
+backgroundColor = "darkgray"
 secondaryBackgroundColor = "black"
 primaryColor = "white"
 textColor = "white"

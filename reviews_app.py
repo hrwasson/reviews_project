@@ -1000,8 +1000,6 @@ elif page == "Your Recommendations":
     df2['State'] = df2['Location'].apply(state)
     df2['Price Range'] = df2['Price']
 
-    st.dataframe(df2)
-
     recommendations(df2)
 
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
