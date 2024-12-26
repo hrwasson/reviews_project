@@ -742,7 +742,7 @@ elif page == "Contribute Reviews":
         submit_button = st.form_submit_button('Submit', type='primary')
 
     if submit_button: 
-        time = datetime.datetime.now(tz='EST').strftime("%m/%d/%Y")
+        time = datetime.datetime.now().strftime("%m/%d/%Y")
         new_data = pd.DataFrame({
             "Timestamp" : [time], 
             "Name" : [name],
