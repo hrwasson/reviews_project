@@ -985,7 +985,6 @@ elif page == "Your Recommendations":
             df2,
             lat='lat',
             lon='lon',
-            size='size',
             hover_name='Name',
             color='Rating',  # Use the Rating column for color mapping
             color_continuous_scale='Purpor',
