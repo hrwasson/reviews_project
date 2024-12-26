@@ -982,7 +982,7 @@ elif page == "Your Recommendations":
     df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
     df2['Would go back?'] = df2['Would go back?'].apply(go_back)
 
-    st.data_frame(df2)
+    st.dataframe(df2)
  
 
 #             else: 
