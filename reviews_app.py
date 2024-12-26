@@ -470,7 +470,7 @@ def spider_chart(df, attributes):
     radar_data = pd.melt(median_df, id_vars='Category', 
                          var_name='theta', value_name='r')
     
-    fig = px.line_polar(radar_data, r='r', theta='theta', color = 'Category', line_close=True, color_discrete_sequence=px.colors.sequential.Plasma_r,
+    fig = px.line_polar(radar_data, r='r', theta='theta', color = 'Category', line_close=True, color_discrete_sequence=px.colors.sequential.Sunsetdark,
                 template="plotly_dark", width= 700, height=500)
     
     fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=True)
@@ -773,9 +773,6 @@ elif page == "Contribute Reviews":
 
         updated_data.to_csv(csv_file, index=False)
         st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
-
-        with open(csv_file, 'w') as file:
-            pass  # This does nothing, but effectively clears the file
 
         
 elif page == "Data at a Glance":

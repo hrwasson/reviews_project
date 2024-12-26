@@ -4,7 +4,7 @@ enableStaticServing = true
 [theme]
 backgroundColor = "#424242"
 secondaryBackgroundColor = "black"
-primaryColor = "#d7c3ff"
+primaryColor = "997cd1"
 textColor = "white"
 font="sans serif"
 
