@@ -435,9 +435,9 @@ def is_valid_address(address):
 
 def lat(address):
     locate = geopy.Nominatim(user_agent="geoapiExercises")
-    if is_valid_address(address): 
-        location = locate.geocode(address)
-        return location.latitude
+   #if is_valid_address(address): 
+    location = locate.geocode(address)
+    return location.latitude
 
 def lon(address):
     locate = geopy.Nominatim(user_agent="geoapiExercises")
