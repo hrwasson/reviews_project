@@ -434,12 +434,16 @@ def lat(address):
         locate = geopy.Nominatim(user_agent="Geopy Library")
         location = locate.geocode(address)
         return location.latitude
+    else: 
+        return None
 
 def lon(address):
     if address is not None:
         locate = geopy.Nominatim(user_agent="Geopy Library")
         location = locate.geocode(address)
         return location.longitude
+    else: 
+        return None
 
 def city(address):
     parsed = usaddress.parse(address)
