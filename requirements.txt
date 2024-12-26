@@ -21,5 +21,4 @@ tf-keras
 datetime
 toml==0.10.2
 usaddress
-os
 
