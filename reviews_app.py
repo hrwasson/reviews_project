@@ -998,6 +998,7 @@ elif page == "Your Recommendations":
     df2['Longitude'] = df2['Location'].apply(lon)
     df2['City'] = df2['Location'].apply(city)
     df2['State'] = df2['Location'].apply(state)
+    df2['Price Range'] = df2['Price']
 
     st.dataframe(df2)
 
