@@ -19,6 +19,7 @@ nltk.download( 'stopwords' )
 nltk.download('punkt')
 import datetime
 import geopy
+import re
 
 st.set_page_config(layout="wide")
 
@@ -427,15 +428,22 @@ def recommendations(df):
     else:
         st.write("No locations match your selected amenities. Please try a different option.")
 
-def lat(data):
-    locate = geopy.Nominatim(user_agent="geoapiExercises")
-    location = locate.geocode(data)
-    return location.latitude
+def is_valid_address(address):
+    pattern = r"^\d+\s[A-Za-z]+\s[A-Za-z]+(?:\s[A-Za-z]+)*$"
+    return bool(re.match(pattern, address))
 
-def lon(data):
+def lat(address):
     locate = geopy.Nominatim(user_agent="geoapiExercises")
-    location = locate.geocode(data)
-    return location.longitude
+    if is_valid_address(address): 
+        location = locate.geocode(address)
+        return location.latitude
+
+def lon(address):
+    locate = geopy.Nominatim(user_agent="geoapiExercises")
+    if is_valid_address(address): 
+        location = locate.geocode(address)
+        return location.longitude
+
 
 #def get_walking_distance(location1, location2): 
    # return haversine(location1, location2, unit=Unit.MILES)
