@@ -619,8 +619,8 @@ if page == "Home":
 
         st.plotly_chart(reccomendation_map)
 
-        attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
-        spider_chart(df, attribute_list)
+    attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
+    spider_chart(df, attribute_list)
 
 
 elif page == "How did I collect the data?":
