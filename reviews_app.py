@@ -776,6 +776,7 @@ elif page == "Contribute Reviews":
 
         with open(csv_file, 'w') as file:
             pass  # This does nothing, but effectively clears the file
+
         
 elif page == "Data at a Glance":
     st.title("Eats & Adventures Tracker - Data at a Glance")
@@ -963,9 +964,12 @@ elif page == "Your Recommendations":
 
     st.title("Eats & Adventures Tracker - Your Recommendations")
 
+
     #TODO: data frame formatting
     df2 = pd.read_csv("form_submission.csv")
 
+    st.dataframe(df2)
+    
     df2['Count of Reviews'] = 1
     df2['Overall Review'] = df2['Positive Review'] + " " + df2['Negative Review']
     df2['Rating'] = df2['Rating'].apply(rating)
