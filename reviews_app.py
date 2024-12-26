@@ -431,20 +431,15 @@ def recommendations(df):
         st.write("No locations match your selected amenities. Please try a different option.")
 
 def lat(address):
-    if address is not None:
-        locate = geopy.Nominatim(user_agent="Geopy Library")
-        location = locate.geocode(address)
-        return location.latitude
-    else: 
-        return None
+    locate = geopy.Nominatim(user_agent="Geopy Library")
+    location = locate.geocode(address)
+    return location.latitude
+
 
 def lon(address):
-    if address is not None:
-        locate = geopy.Nominatim(user_agent="Geopy Library")
-        location = locate.geocode(address)
-        return location.longitude
-    else: 
-        return None
+    locate = geopy.Nominatim(user_agent="Geopy Library")
+    location = locate.geocode(address)
+    return location.longitude
 
 def city(address):
     parsed = usaddress.parse(address)
@@ -487,28 +482,18 @@ df['Overall Sentiment'] = df['Overall Review'].apply(clean).apply(get_overall_se
 #********************************************************************************************************************************************
 # creating the streamlit app: 
 
-#  setting page configuration 
-
-# putting my picture on the sidebar
-
+# BEGIN SIDE BAR
 logo = "hannah.jpg"
 st.sidebar.image(logo)
-
-# Customize page title
-
-# Sidebar navigation
-
 st.markdown('''
             <div style="background-color:white; color:black">
             ''', unsafe_allow_html=True)
-
 page = st.sidebar.selectbox(
     "Navigation",
     ["Home", "How did I collect the data?", "Contribute Reviews", "Data at a Glance", "My Recommendations", "Your Recommendations", "Give me feedback"], 
     index=0, 
     placeholder= "Where would you like to navigate to?"
 )
-
 markdown = '''
 
 <div style="background-color:white; color:black; padding:15px; border-radius:10px;">
@@ -520,10 +505,9 @@ markdown = '''
     new places and growing my data science expertise!
 </div>
 '''
-
-# Sidebar content
 st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
+# END SIDE BAR
 
 
 if page == "Home":
@@ -774,6 +758,7 @@ elif page == "Contribute Reviews":
         st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
 
 elif page == "Data at a Glance":
+
     st.title("Eats & Adventures Tracker - Data at a Glance")
     # Map Visualization 
 
@@ -959,11 +944,8 @@ elif page == "Your Recommendations":
 
     st.title("Eats & Adventures Tracker - Your Recommendations")
 
-
     #TODO: data frame formatting
     df2 = pd.read_csv("form_submission.csv")
-
-    st.dataframe(df2)
 
     df2['Count of Reviews'] = 1
     df2['Overall Review'] = df2['Positive Review'] + " " + df2['Negative Review']
@@ -982,6 +964,9 @@ elif page == "Your Recommendations":
     df2['City'] = df2['Location'].apply(city)
     df2['State'] = df2['Location'].apply(state)
     df2['Price Range'] = df2['Price']
+
+    st.dataframe(df2)
+
 
     df2_map = px.scatter_mapbox(
             df2,
