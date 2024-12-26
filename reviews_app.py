@@ -639,39 +639,39 @@ elif page == "Contribute Reviews":
 
         st.subheader("Rating information")
 
-        rating = st.selectbox(
+        r = st.selectbox(
             "What is your overall rating of this location?",
             options = ['Not for me', 'Fair', 'Okay but not great', 'Really good', 'Best place ever!'], 
             index=None,
             placeholder='Please select your overall rating...'
         )
-        price = st.selectbox(
+        p = st.selectbox(
             "What is the price range?",
             options = ['$', '$$', '$$$', '$$$$'], 
             index=None, 
             placeholder="Please fill select the price range."
         )
-        atmosphere = st.selectbox(
+        a = st.selectbox(
             "What is your rating on the atmosphere? This should reflect your opinion on the overall comfort and mood of the space.",
             options = ['Uninviting', 'Not my vibe', 'Decent', 'Almost perfect', 'Amazing'], 
             index=None, 
             placeholder="Please select your rating of the atmosphere..."
         )
-        food_quality = st.selectbox(
+        f = st.selectbox(
             "What is your rating on the food quality? This should reflect your opinion on the overall enjoyment of the food you ordered. Feel free to skip if you did not order food! ",
             options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
              index=None, 
             placeholder="Please select your rating of the food quality..."
         )
 
-        service = st.selectbox(
+        s = st.selectbox(
             "What is your rating on the service? ",
             options = ['Just okay', 'Could be better', 'Meets expectations', 'Very friendly', 'Super Kind'], 
             index=None, 
             placeholder="Please select your rating of the food quality..."
         )
 
-        unique_aspects = st.selectbox(
+        u = st.selectbox(
             "What is your rating on the unique aspects? This should reflect your opinion on the decor, stand out features, unique offers, etc.",
             options = ['Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'], 
             index=None, 
@@ -727,7 +727,14 @@ elif page == "Contribute Reviews":
             index=None,
             placeholder="Please select an option..."
         )
-        submit_button = st.form_submit_button('Submit', disabled=True, type='primary')
+
+        valid_input = [name.strip, address.strip, category.strip, season.strip, 
+                       order.strip, p.strip, r.strip, p.strip, a.strip, f.strip,
+                         s.strip,u.strip, positive_review.strip,negative_review.strip,
+                         would_go_back.strip,parking_ease.strip,parkingtype1.strip,
+                           parkingtype2.strip,wifi_select.strip, charging_select.strip]
+        
+        submit_button = st.form_submit_button('Submit', disabled=not valid_input, type='primary')
 
     if submit_button: 
         time = datetime.datetime.now().strftime("%m/%d/%Y")
@@ -738,12 +745,12 @@ elif page == "Contribute Reviews":
             "Category": [category],
             "Season Visited": [season], 
             "What I got/did" : [order],
-            "Rating": [rating], 
-            "Price": [price],
-            "Atmosphere": [atmosphere], 
-            "Food quality": [food_quality],
-            "Service":[service],
-            "Unique Aspects": [unique_aspects], 
+            "Rating": [r], 
+            "Price": [p],
+            "Atmosphere": [a], 
+            "Food quality": [f],
+            "Service":[s],
+            "Unique Aspects": [u], 
             "Positive Review": [positive_review], 
             "Negative Review": [negative_review],
             "Would go back?": [would_go_back], 
