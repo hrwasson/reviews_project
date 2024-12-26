@@ -429,33 +429,33 @@ def recommendations(df):
     else:
         st.write("No locations match your selected amenities. Please try a different option.")
 
-def is_valid_address(address):
-    pattern = r"^\d+\s[A-Za-z]+\s[A-Za-z]+(?:\s[A-Za-z]+)*$"
-    return bool(re.match(pattern, address))
-
 def lat(address):
-    locate = geopy.Nominatim(user_agent="geoapiExercises")
-    if is_valid_address(address): 
-        location = locate.geocode(address)
-        return location.latitude
+    locate = geopy.Nominatim(user_agent="Geopy Library")
+    location = locate.geocode(address)
+    return location.latitude
 
 def lon(address):
-    locate = geopy.Nominatim(user_agent="geoapiExercises")
-    if is_valid_address(address): 
-        location = locate.geocode(address)
-        return location.longitude
+    locate = geopy.Nominatim(user_agent="Geopy Library")
+    location = locate.geocode(address)
+    return location.longitude
 
-def city(address): 
-    if is_valid_address(address=address): 
-        parsed = usaddress.parse(address)
-        city = [tag_value for tag, tag_value in parsed if tag == 'PlaceName'][0]
-        return city
+def city(address):
+    parsed = usaddress.parse(address)
+    for val in parsed: 
+        var1, var2 = val
+        if var2 == 'PlaceName': 
+            city = var1
+            city = city.replace(",", "")
+            return city
     
 def state(address): 
-    if is_valid_address(address=address): 
-        parsed = usaddress.parse(address)
-        state = [tag_value for tag, tag_value in parsed if tag == 'StateName'][0]
-        return state
+    parsed = usaddress.parse(address)
+    for val in parsed: 
+        var1, var2 = val
+        if var2 == 'StateName': 
+            state = var1
+            state = state.replace(",", "")
+            return state
 
 def spider_chart(df, attributes):
     df = pd.DataFrame(df)
