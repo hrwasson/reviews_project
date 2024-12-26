@@ -975,8 +975,8 @@ elif page == "Your Recommendations":
     df2['Service'] = df2['Service'].apply(service)
     df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
     df2['Would go back?'] = df2['Would go back?'].apply(go_back)
-    df2['Latitude'] = df2['Location'].apply(lat)
-    df2['Longitude'] = df2['Location'].apply(lon)
+    df2['lat'] = df2['Location'].apply(lat)
+    df2['lon'] = df2['Location'].apply(lon)
     df2['City'] = df2['Location'].apply(city)
     df2['State'] = df2['Location'].apply(state)
     df2['Price Range'] = df2['Price']
