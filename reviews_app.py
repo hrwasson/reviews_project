@@ -528,7 +528,7 @@ def clean_dataframe(df2):
     df2['Service'] = df2['Service'].apply(service)
     df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
     df2['Would go back?'] = df2['Would go back?'].apply(go_back)
-    df2['lat'], df2['lon'] = df2['Lat/Lon'].apply(clean_lat_lon)
+    df2[['lat', 'lon']] = df2['Lat/Lon'].apply(clean_lat_lon).apply(pd.Series)
     df2['City'] = df2['Location'].apply(city)
     df2['State'] = df2['Location'].apply(state)
     df2['Price Range'] = df2['Price']
