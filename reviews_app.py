@@ -1028,11 +1028,15 @@ elif page == "My Recommendations":
 elif page == "Your Recommendations": 
 
     st.title("Eats & Adventures Tracker | Your Recommendations")
+    df2 = pd.read_csv("form_submission.csv")
+
+    df2 = clean_dataframe(df2)
+
+    st.dataframe(df2)
+    
     try: 
     #TODO: data frame formatting
-        df2 = pd.read_csv("form_submission.csv")
 
-        df2 = clean_dataframe(df2)
 
         df2_map_df = df2.groupby('Name')['lat', 'lon', 'size', 'Rating'].mean()
 
