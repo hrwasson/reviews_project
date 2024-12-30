@@ -664,7 +664,7 @@ elif page == "Contribute Reviews":
     try: 
         st.subheader('Please fill out the form with your reviews:')
 
-        csv_file = "form_submission.csv"
+        # csv_file = "form_submission.csv"
 
         reviews_form = st.form("your_reviews", clear_on_submit=False, enter_to_submit=False)
 
@@ -1024,7 +1024,6 @@ elif page == "Your Recommendations":
 
     try: 
     #TODO: data frame formatting
-
 
         df2_map_df = df2.groupby('Name')['lat', 'lon', 'size', 'Rating'].mean()
 
