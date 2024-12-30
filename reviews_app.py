@@ -21,6 +21,7 @@ import geopy
 import re
 import usaddress
 import os
+from streamlit_gsheets import GSheetsConnection
 # NECESSARY DOWNLOADS 🔽
 nltk.download( 'stopwords' )
 nltk.download('punkt')
@@ -41,6 +42,9 @@ st.set_page_config(layout="wide")
 sheet_id = st.secrets["sheets"]["url"]
 df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
 
+# ACCESSING THE URL TO PULL IN PUBLIC RECOMMENDATIONS 🪪
+conn = st.connection("gsheets", type=GSheetsConnection)
+pdf = conn.read(worksheet="Sheet1")
 
 # INITIAL CLEANING OF THE DATA 🛁
 df.rename(columns={'Latitude': 'lat'}, inplace=True)
@@ -811,18 +815,8 @@ elif page == "Contribute Reviews":
                 "Charging Outlets": [charging_select]
             })
 
-            if os.path.exists(csv_file) and os.path.getsize(csv_file) > 0:
+            conn.update("Sheet1", data= new_data)
 
-                try:
-                    existing_data = pd.read_csv(csv_file)
-                    updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-                except pd.errors.EmptyDataError:
-                    updated_data = new_data
-            else:
-                updated_data = new_data
-
-
-            updated_data.to_csv(csv_file, index=False)
             st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
     except: 
         st.write("Sorry, this page is not availiable at the moment. ☹️ ")
@@ -1020,7 +1014,9 @@ elif page == "My Recommendations":
 elif page == "Your Recommendations": 
 
     st.title("Eats & Adventures Tracker | Your Recommendations")
-    df2 = pd.read_csv("form_submission.csv")
+    read = conn.read("Sheet1")
+
+    df2 = pd.DataFrame(read)
 
     df2 = clean_dataframe(df2)
 
