@@ -484,33 +484,25 @@ def spider_chart(df, attributes):
     st.plotly_chart(fig, on_select=callable)
 
 def clean_lat_lon(input_string):
-    # Match degrees, minutes, seconds, and direction
-    pattern = r"(\d+)°\s*(\d+)'?\s*(\d+\.?\d*)?\"?\s*([NSEW])"
-    matches = re.findall(pattern, input_string)
+    import re
+    # Regex pattern to match decimal degrees and cardinal directions
+    pattern = r"([\d.]+)°\s*([NS]),\s*([\d.]+)°\s*([EW])"
+    match = re.match(pattern, input_string.strip())
     
-    if not matches or len(matches) != 2:
-        return "Invalid input format"
-
-    latitude, longitude = None, None
-
-    for match in matches:
-        degrees = float(match[0])
-        minutes = float(match[1])
-        seconds = float(match[2]) if match[2] else 0  # Default to 0 if seconds are not provided
-        direction = match[3]
-        
-        # Convert to decimal degrees
-        decimal_degrees = degrees + (minutes / 60) + (seconds / 3600)
-        
-        # Apply sign based on direction
-        if direction in ["S", "W"]:
-            decimal_degrees *= -1
-        
-        # Assign to latitude or longitude based on direction
-        if direction in ["N", "S"]:
-            latitude = decimal_degrees
-        elif direction in ["E", "W"]:
-            longitude = decimal_degrees
+    if not match:
+        return "Invalid input. Please use the format: 38.89002° N, 77.08630° W"
+    
+    # Extract latitude and longitude values
+    latitude = float(match.group(1))
+    lat_direction = match.group(2)
+    longitude = float(match.group(3))
+    lon_direction = match.group(4)
+    
+    # Adjust sign based on direction
+    if lat_direction == "S":
+        latitude *= -1
+    if lon_direction == "W":
+        longitude *= -1
     
     return latitude, longitude
 
@@ -1033,7 +1025,7 @@ elif page == "Your Recommendations":
     df2 = clean_dataframe(df2)
 
     st.dataframe(df2)
-    
+
     try: 
     #TODO: data frame formatting
 
