@@ -44,7 +44,7 @@ df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?form
 
 # ACCESSING THE URL TO PULL IN PUBLIC RECOMMENDATIONS 🪪
 conn = st.connection("gsheets", type=GSheetsConnection)
-pdf = conn.read(worksheet="Sheet1")
+pdf = conn.read(worksheet="Public Reviews")
 
 # INITIAL CLEANING OF THE DATA 🛁
 df.rename(columns={'Latitude': 'lat'}, inplace=True)
@@ -193,6 +193,13 @@ def go_back(data):
     if data =='Probably Yes': return 4
     if data == 'Absolutely': return 5   
 
+def driveability(data): 
+    if data == 'Parked 20 blocks away': return 1
+    if data == 'Kept circling to find a spot': return 2
+    if data == 'It was manageable': return 3
+    if data =='Plenty of spaces close by': return 4
+    if data == 'So easy and stress-free': return 5   
+
 def recommendations(df):
 
     selected_region = st.selectbox("Where are you traveling to?", 
@@ -271,7 +278,7 @@ def recommendations(df):
             parking2 = output['Parking Type 2'][0]
             whatIGot = output['What I got/did'][0]
             
-            st.subheader(f"Based on your selections, you would be {emotion} at:")
+            st.subheader(f"Based on your selections and the overall review of this location, you would be {emotion} at:")
 
             text_content = (
                     f"**Name:** {name}\n\n"
@@ -285,10 +292,24 @@ def recommendations(df):
             
             st.markdown(text_content)
 
+            st.divider()
+
+            st.markdown('''
+                The word cloud below highlights the most frequently mentioned words in the positive reviews, with larger and bolder words representing higher frequencies.
+            '''
+            )
+
             word_cloud_review = word_cloud(output)
 
             st.image(word_cloud_review)
 
+            st.divider()
+
+            map_col1, map_col2 = st.columns(2)
+
+            st.markdown('''
+                The map below illustrates the address of this location. The color of the point coordinates with the overall rating.
+                        ''')
             map_output = pd.DataFrame(output).head(1)
 
             reccomendation_map = px.scatter_mapbox(
@@ -300,15 +321,23 @@ def recommendations(df):
                 color='Rating',  # Use the Rating column for color mapping
                 color_continuous_scale='Purpor',
                 mapbox_style='carto-positron',
-                title=f'{name}:',
+                title=f'{name}: {location}',
                 width=1000,
                 height=500, 
                 zoom = 15
             )
+            
             reccomendation_map.update_traces(
                 hovertemplate="<b>%{hovertext}</b>"  # Only show the name
             )
             st.plotly_chart(reccomendation_map)
+
+            st.divider()
+
+            st.markdown(f"The radar chart below shows the ratings for food quality, service, unique aspects, and atmosphere for {name}. The further the shape tends to the outside of the circle, the higher the rating for that specific attribute.")
+            attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
+            name = map_output['Name'].iloc[0]
+            spider_chart2(map_output, name_input= name, attributes=attribute_list)
         
         with tab2: 
             ammenities_df['Rating'] = pd.to_numeric(ammenities_df['Rating'], errors='coerce')
@@ -473,43 +502,36 @@ def state(address):
             state = state.replace(",", "")
             return state
 
-def spider_chart(df, attributes):
+def spider_chart(df, type, attributes):
     df = pd.DataFrame(df)
-    median_df = df.groupby('Category')[attributes].median().reset_index()
-    
-    radar_data = pd.melt(median_df, id_vars='Category', 
+    cat_counts = df[type].value_counts()
+    threshold = 2
+    top_cats = cat_counts[cat_counts > threshold].head(3).index
+    filter_cats = df[df[type].isin(top_cats)]
+    median_df = filter_cats.groupby(type)[attributes].median().reset_index()
+    radar_data = pd.melt(median_df, id_vars=type, 
                          var_name='theta', value_name='r')
     
-    fig = px.line_polar(radar_data, r='r', theta='theta', color = 'Category', line_close=True, color_discrete_sequence=px.colors.sequential.Sunsetdark,
+    fig = px.line_polar(radar_data, r='r', theta='theta', color = type, line_close=True, color_discrete_sequence=px.colors.sequential.Sunset[::3],
                 template="plotly_dark", width= 700, height=500)
     
     fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=True)
+    fig.update_traces(fill = 'toself')
+    return st.plotly_chart(fig, on_select=callable)
 
-    st.plotly_chart(fig, on_select=callable)
-
-def clean_lat_lon(input_string):
-    import re
-    # Regex pattern to match decimal degrees and cardinal directions
-    pattern = r"([\d.]+)°\s*([NS]),\s*([\d.]+)°\s*([EW])"
-    match = re.match(pattern, input_string.strip())
+def spider_chart2(df, name_input, attributes):
+    df = pd.DataFrame(df)
+    input = df['Name'].iloc[0]
+    name_df = df[attributes]
+    name_df['Name'] = df['Name']
+    radar_data = pd.melt(name_df, id_vars=['Name'], 
+                         var_name='theta', value_name='r')
+    fig = px.line_polar(radar_data, r='r', theta='theta', color = 'Name', line_close=True, color_discrete_sequence=px.colors.sequential.Purpor,
+                template="plotly_dark", width= 700, height=500, title=f"Radar Chart for {input}")
     
-    if not match:
-        return "Invalid input. Please use the format: 38.89002° N, 77.08630° W"
-    
-    # Extract latitude and longitude values
-    latitude = float(match.group(1))
-    lat_direction = match.group(2)
-    longitude = float(match.group(3))
-    lon_direction = match.group(4)
-    
-    # Adjust sign based on direction
-    if lat_direction == "S":
-        latitude *= -1
-    if lon_direction == "W":
-        longitude *= -1
-    
-    return latitude, longitude
-
+    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 5])),showlegend=False)
+    fig.update_traces(fill = 'toself')
+    return st.plotly_chart(fig, on_select=callable, use_container_width=True)
 
 def clean_dataframe(df2): 
     df2['Count of Reviews'] = 1
@@ -524,10 +546,12 @@ def clean_dataframe(df2):
     df2['Service'] = df2['Service'].apply(service)
     df2['Unique Aspects'] = df2['Unique Aspects'].apply(unique_aspects)
     df2['Would go back?'] = df2['Would go back?'].apply(go_back)
-    df2[['lat', 'lon']] = df2['Lat/Lon'].apply(clean_lat_lon).apply(pd.Series)
+    df2.rename(columns={'Latitude': 'lat'}, inplace=True)
+    df2.rename(columns={'Longitude': 'lon'}, inplace=True)
     df2['City'] = df2['Location'].apply(city)
     df2['State'] = df2['Location'].apply(state)
     df2['Price Range'] = df2['Price']
+    df2['Parking'] = df2['Parking'].apply(driveability)
     return df2
 
 df['color'] = df['Rating'].apply(get_color)
@@ -547,7 +571,7 @@ st.markdown('''
             ''', unsafe_allow_html=True)
 page = st.sidebar.selectbox(
     "Navigation",
-    ["Home", "How did I collect the data?", "Contribute Reviews", "Data at a Glance", "My Recommendations", "Your Recommendations", "Give me feedback"], 
+    ["Home", "Collecting the Data", "Contribute Reviews", "Data at a Glance", "My Recommendations", "Your Recommendations"], 
     index=0, 
     placeholder= "Where would you like to navigate to?"
 )
@@ -571,6 +595,12 @@ if page == "Home":
     st.title("Eats & Adventures Tracker | Home")
 
     try: 
+        sum_reviews = df['Count of Reviews'].sum()
+        num_cities = df['City'].nunique()
+        num_states = df['State'].nunique()
+
+        st.header(f"I have reviewed {sum_reviews} locations in {num_cities} cities and {num_states} states/territories. Including...")
+
         col1, col2 = st.columns(2)
 
         with col1: 
@@ -607,6 +637,7 @@ if page == "Home":
                             lon='lon',
                             size='size',
                             hover_name='Name',
+                            #color='Rating',
                             #color='Count of Reviews',  # Use the Rating column for color mapping
                             #color_continuous_scale='Purpor',
                             color_discrete_sequence=['purple'],
@@ -622,17 +653,20 @@ if page == "Home":
 
             st.plotly_chart(reccomendation_map)
 
+        st.subheader(f"For each of the {sum_reviews} reviews, I have rated them based on four distinct attributes - food quality, service, unique aspects, and atmosphere.")
+        st.markdown("The radar chart below shows the median ratings across the top most common location types represented in my reviews. The further the shape tends to the outside of the circle, the higher the overall category is rated for that specific attribute.")
+        
         left, middle, right = st.columns((2, 7, 2))
 
         with middle:
             attribute_list = ['Food quality', 'Service', 'Unique Aspects', 'Atmosphere']
-            spider_chart(df, attribute_list)
+            spider_chart(df, type='Category', attributes= attribute_list)
     except:
         st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
 # DATA COLLECTION PAGE 📊
-elif page == "How did I collect the data?":
-    st.title("Eats & Adventures Tracker | How did I collect the data?")
+elif page == "Collecting the Data":
+    st.title("Eats & Adventures Tracker | Collecting the Data")
 
     try:
     # Label field
@@ -641,17 +675,66 @@ elif page == "How did I collect the data?":
             I've been collecting the data via a Google Form, reviewing on the following characteristics:
 
             - Visit Information: Date of Visit
-            - Location Details: Name, Category, Location, Latitude, Longitude, and Parking Ease and Types (e.g., Street Parking, Parking Lot).
+            - Location Details: Name, Category, Address, Latitude, Longitude, and Parking Ease and Types (e.g., Street Parking, Parking Lot).
             - Visit Context: Season Visited, What I Got/Did.
             - Ratings and Reviews: Overall Rating, Atmosphere, Food Quality, Service, Unique Aspects, Positive Review, Negative Review, and whether I would return to the place.
             - Amenities: WiFi Availability, and Charging Outlets
-            - Cost: Price (e.g. $, $$, $$$, $$$$)    
+            - Cost: Price (e.g. $, $$, ...)    
+            
+            **Interested in how the attributes were specifically rated?**
 
             """
         )
 
+        with st.expander("See rating explanations"): 
+
+            st.markdown(
+                '''
+                Name of Location: free response
+
+                Address: free response
+
+                Category: "Coffee Shop", "Restaurant", "Bar", "Dessert", "Fast Food", "Diner", "Bakery", "Park", "Museum", "Outdoor Activity", "Indoor Activity", "Uber Eats", "Door Dash", "Brewery"
+
+                Season: 'Summer', 'Fall', 'Winter', 'Spring'
+
+                Order (Skipped if no order.): Free response.
+
+                Overall Rating: 'Not for me', 'Fair', 'Okay but not great', 'Really good', 'Best place ever!'
+                
+                Price Range: '$', '$$', '$$$', '$$$$'
+                
+                Atmosphere Rating (opinion on the overall comfort and mood of the space): 'Uninviting', 'Not my vibe', 'Decent', 'Almost perfect', 'Amazing'
+                
+                Food Quality Rating (opinion on the overall enjoyment of the food you ordered. Skipped if no food was ordered): 'Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'
+                
+                Service Rating: 'Just okay', 'Could be better', 'Meets expectations', 'Very friendly', 'Super Kind'
+                
+                Unique Aspects Rating (opinion on the decor, stand out features, unique offers, etc.) : 'Not my favorite', 'Mediocre', 'Decent', 'Very good', 'Outstanding'
+                
+                Positive Review: Free response
+
+                Negative Review: Free response
+
+                Would go back?: "Definitely Not", "Probably Not", "Maybe", "Probably Yes", "Absolutely"
+
+                What was your experience getting to the location: 'Parked 20 blocks away', 'Kept circling to find a spot', 'It was manageable', 'Plenty of spaces close by', 'So easy and stress-free'
+
+                Primary parking type: 'Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro'
+
+                Secondary parking type: 'None', 'Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro'
+
+                Wi-Fi Compatibility: 'Yes', 'No', 'Not Sure'
+
+                Charging Outlets Compatibility: 'Yes', 'No', 'Not Sure'
+
+                '''
+            )
+
+        st.markdown('''To reduce potential bias, I introduced a **public review contribution form**. This form mirrors the questions in my personal Google Form, ensuring consistency in data collection. I invite you to support this personal project by visiting the **'Contribute Reviews'** page and sharing your insights!''')
         # Add the Google Form image
-        st.image("datacollection.png")
+        st.image("Review Log.png")
+
 
     except: 
        st.write("Sorry, this page is not availiable at the moment. ☹️ ")
@@ -678,8 +761,8 @@ elif page == "Contribute Reviews":
                                     
                                     placeholder="e.g., 123 Main Street, City, State, ZIP")
             
-            lat_lon_input = st.text_input('What is the latitude and longitude of the location?',
-                                    placeholder="Please input the latitude and longitude...")
+            # lat_lon_input = st.text_input('What is the latitude and longitude of the location?',
+            #                         placeholder="Please input the latitude and longitude...")
             
             category  = st.selectbox(
                 "What category does this location fall in?",
@@ -768,7 +851,7 @@ elif page == "Contribute Reviews":
 
             parkingtype2 = st.selectbox(
                 "What was your secondary parking type?",
-                options = ['Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro', 'None'],
+                options = ['None', 'Street', 'Parking Lot', 'Parking Garage', 'Drive Through', 'Uber Eats', 'Door Dash', 'Metro'],
                 index=None, 
                 placeholder="Please select your secondary parking type..."
             )
@@ -797,7 +880,7 @@ elif page == "Contribute Reviews":
                 "Timestamp" : [time], 
                 "Name" : [name],
                 "Location": [address],
-                "Lat/Lon": [lat_lon_input],
+                # "Lat/Lon": [lat_lon_input],
                 "Category": [category],
                 "Season Visited": [season], 
                 "What I got/did" : [order],
@@ -812,10 +895,14 @@ elif page == "Contribute Reviews":
                 "Would go back?": [would_go_back], 
                 "Parking": [parking_ease],
                 "WiFi": [wifi_select], 
-                "Charging Outlets": [charging_select]
+                "Charging Outlets": [charging_select], 
+                "Parking Type 1": [parkingtype1], 
+                "Parking Type 2": [parkingtype2]
             })
 
-            conn.update("Sheet1", data= new_data)
+            updated_reviews = pd.concat([pdf, new_data], ignore_index=True)
+
+            conn.update(worksheet="Public Reviews", data = updated_reviews)
 
             st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
     except: 
@@ -837,7 +924,7 @@ elif page == "Data at a Glance":
         """, unsafe_allow_html=True)
 
         selected_category = st.multiselect(
-            label="Select a Category", 
+            label="Select a Category...", 
             options=df['Category'].unique(),
             placeholder="Select a Category"
         )
@@ -848,7 +935,7 @@ elif page == "Data at a Glance":
             filtered_states = []
 
         selected_state = st.multiselect(
-            label="Select a State/Territory", 
+            label="Select a State/Territory...", 
             options=filtered_states,
             placeholder="Select a State"
         )
@@ -859,12 +946,18 @@ elif page == "Data at a Glance":
             filtered_cities = []
 
         selected_city = st.multiselect(
-                label="Select a City/Territory", 
+                label="Select a City...", 
                 options= filtered_cities,
                 placeholder="Select a City"
             )
 
         st.header("Map of Reviewed Locations")
+
+        st.markdown(
+            '''
+            The map below displays the precise coordinates of the reviewed locations. The size and color of each point correspond to the overall rating of the location.
+            '''
+        )
 
         if selected_state or selected_city or selected_category:
 
@@ -873,6 +966,8 @@ elif page == "Data at a Glance":
             if selected_state: filtered_df = filtered_df[(filtered_df['State'].isin(selected_state))]
             if selected_city: filtered_df = filtered_df[(filtered_df['City'].isin(selected_city))]
             if selected_category: filtered_df = filtered_df[(filtered_df['Category'].isin(selected_category))]
+            
+            count = len(filtered_df)
 
             map_fig = px.scatter_mapbox(
                 filtered_df,
@@ -883,7 +978,7 @@ elif page == "Data at a Glance":
                 color='Rating',  # Use the Rating column for color mapping
                 color_continuous_scale='Purpor',
                 mapbox_style='carto-positron',
-                title='Reviewed Locations:',
+                title= f'Count of Reviewed Locations: {count}',
                 width=1000,
                 height=700,
                 zoom=5
@@ -896,6 +991,8 @@ elif page == "Data at a Glance":
             st.plotly_chart(map_fig)
 
         else:
+            full_count = len(df)
+
             full_map = px.scatter_mapbox(
                 df,
                 lat='lat',
@@ -905,7 +1002,7 @@ elif page == "Data at a Glance":
                 color='Rating',  # Use the Rating column for color mapping
                 color_continuous_scale='Purpor',
                 mapbox_style='carto-positron',
-                title='Reviewed Locations:',
+                title= f'Count of Reviewed Locations: {full_count}',
                 width=1000,
                 height=700, 
                 zoom = 5
@@ -918,6 +1015,11 @@ elif page == "Data at a Glance":
         # Reviews Over Time
 
         st.header("Reviews Over Time")
+
+        st.markdown(
+            '''
+            The bar chart below illustrates the number of reviews over time, with the color of each bar reflecting the median rating of reviews for that specific day.            '''
+        )
 
         df_group = df.groupby('Timestamp')['Count of Reviews'].sum().reset_index()
         df_group2 = df.groupby('Timestamp')['Rating'].median().reset_index()
@@ -948,17 +1050,20 @@ elif page == "Data at a Glance":
 
         st.markdown(
             """
-            Note: You may notice a high count of reviews in the begining of the bar chart around 11/11 and 11/12. After collecting using a notesheet over the summer, I transitioned into a more uniformed process starting in Novemember, hence the large spike in the bar plot. 
+            **Note:** You may notice a high count of reviews in the begining of the bar chart around 11/11 and 11/12. After collecting using a notesheet over the summer, I transitioned into a more uniformed process starting in Novemember, hence the large spike in the bar plot. 
             """
         )
 
-        st.markdown(
-            'The following pie chart shows the percentage of categories represented in the reviews.'
-        )
-        
+        st.divider()
+
         pie_col1, pie_col2 = st.columns(2)
 
         with pie_col1: 
+
+            st.markdown(
+                'The pie chart below illustrates the distribution of categories represented in the reviews.'
+            )
+        
             df_pie = df.groupby('Category')['Count of Reviews'].sum().reset_index()
             df_pie['Count of Reviews'] = df_pie['Count of Reviews']/100
             df_pie = df_pie.sort_values(by='Category', ascending=True)
@@ -969,14 +1074,25 @@ elif page == "Data at a Glance":
             st.plotly_chart(pie_chart)
 
         with pie_col2: 
+
+            st.markdown(
+                'The following bar chart shows the median overall rating across categories in the dataset.'
+            )
+
             cat_rating_bar = df.groupby('Category')['Rating'].median().reset_index()
             cat_rating_bar = cat_rating_bar.sort_values(by='Rating', ascending=True)
             bar_chart = px.bar(cat_rating_bar, x='Category', y='Rating', title='Median Rating Across Categories', color_discrete_sequence=px.colors.sequential.PuBu)
             st.plotly_chart(bar_chart)
 
+        st.divider() 
+
         pie_col3, pie_col4 = st.columns(2)
 
         with pie_col3: 
+
+            st.markdown(
+                'The pie chart below illustrates the distribution of the primary parking type represented in the reviews.'
+            )
 
             pie_chart3 = df.groupby('Parking Type 1')['Count of Reviews'].sum().reset_index()
             pie_chart3['Count of Reviews'] = pie_chart3['Count of Reviews']/100
@@ -988,8 +1104,12 @@ elif page == "Data at a Glance":
             st.plotly_chart(pie_chart3)
 
 
+        with pie_col4:
 
-        with pie_col4: 
+            st.markdown(
+                'The pie chart below illustrates the distribution of the secondary parking type represented in the reviews.'
+            ) 
+
             pie_chart4 = df.groupby('Parking Type 2')['Count of Reviews'].sum().reset_index()
             pie_chart4['Count of Reviews'] = pie_chart4['Count of Reviews']/100
             pie_chart4 = pie_chart4.sort_values(by='Parking Type 2', ascending=False)
@@ -1012,49 +1132,82 @@ elif page == "My Recommendations":
 
 # YOUR RECOMMENDATIONS PAGE🍕
 elif page == "Your Recommendations": 
-
     st.title("Eats & Adventures Tracker | Your Recommendations")
-    read = conn.read("Sheet1")
+    
+    read_file = conn.read(worksheet="Public Reviews")
 
-    df2 = pd.DataFrame(read)
-
-    df2 = clean_dataframe(df2)
-
-    st.dataframe(df2)
+    df2 = clean_dataframe(read_file)
+    
+    df2['Number of Reviews'] = 1
 
     try: 
     #TODO: data frame formatting
 
-        df2_map_df = df2.groupby('Name')['lat', 'lon', 'size', 'Rating'].mean()
+        st.markdown('''
+        The following map displays all the publically reviewed locations. The color of the point represents the mean overall rating. 
+                    If you're interested in contributing, please navigate to the 'Contribute Reviews' page!
+                    ''')
+        
+        df3 = df2.groupby(['lat', 'lon']).agg({'Name': 'first', 
+                                                      'Rating': 'median',
+                                                      'Number of Reviews':'sum', 
+                                                      'Location': 'first',
+                                                      'Positive Review': lambda x : ' '.join(x.dropna().astype(str)),
+                                                      'Negative Review': lambda x : ' '.join(x.dropna().astype(str)),
+                                                      'Category': 'first',
+                                                      'Season Visited': 'first',
+                                                      'What I got/did': lambda x : ', '.join(x.dropna().astype(str)),
+                                                      'Atmosphere': 'median',
+                                                      'Food quality' : 'median', 
+                                                      'Service' : 'median', 
+                                                      'Unique Aspects': 'median', 
+                                                      'Charging Outlets': 'first',
+                                                      'WiFi': 'first',
+                                                      'Would go back?': 'median', 
+                                                      'Parking': 'median',
+                                                      'City': 'first',
+                                                      'State': 'first',
+                                                      'Overall Review': lambda x : ', '.join(x.dropna().astype(str)),
+                                                      'Price Range': 'first', 
+                                                      'Count of Reviews' : 'sum',
+                                                      'Parking Type 1' : 'first', 
+                                                      'Parking Type 2': 'first'
+                                                      }).reset_index()
+        
+
+        df3['Overall Sentiment'] = df3['Overall Review'].apply(clean).apply(get_overall_sentiment)
+        df3['size'] = df3['Rating'] * 10
+
+        public_len = len(df3)
 
         df2_map = px.scatter_mapbox(
-                df2_map_df,
+                df3,
                 lat='lat',
                 lon='lon',
                 hover_name='Name',
-                size = 'size',
+                hover_data={'Number of Reviews': True},
+                size='size',
                 color='Rating',  # Use the Rating column for color mapping
                 color_continuous_scale='Purpor',
                 mapbox_style='carto-positron',
-                title='Publically Reviewed Locations:',
+                title=f'Number of Publically Reviewed Locations: {public_len}',
                 width=1000,
-                height=700,
-                zoom=2
+                height=600,
+                zoom=3
             )
+        df2_map.update_traces(
+            hovertemplate="<b>%{hovertext}</b>"  # Custom hover text formatting
+        )
         
         st.plotly_chart(df2_map)
 
-        recommendations(df=df2)
+        recommendations(df=df3)
+
 
     except: 
         st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
     #TODO: Add a form entry here and a progress bar for how much of the form is complete in the second column
 
-# GIVE ME YOUR FEEDBACK PAGE 📧
-elif page == "Give me feedback": 
-    # THIS PAGE WILL HAVE  A CONTACT ME PAGE AND AN EMAIL FORWARDING FORM
-    st.title("Eats & Adventures Tracker | Give me feedback")
-    
 #END STREAMLIT APP DEV
 #********************************************************************************************************************************************
