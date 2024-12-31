@@ -588,6 +588,9 @@ markdown = '''
 '''
 st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
+st.sidebar.link_button("Connect with me on LinkedIn", "https://www.linkedin.com/in/hannah-wasson/")
+st.sidebar.link_button("Visit my GitHub Page", "https://hrwasson.github.io/")
+
 # END SIDE BAR
 
 # HOME PAGE 🏠
@@ -599,7 +602,7 @@ if page == "Home":
         num_cities = df['City'].nunique()
         num_states = df['State'].nunique()
 
-        st.header(f"I have reviewed {sum_reviews} locations in {num_cities} cities and {num_states} states/territories. Including...")
+        st.subheader(f"I have reviewed {sum_reviews} locations in {num_cities} cities across {num_states} states and territories. These include...")
 
         col1, col2 = st.columns(2)
 
@@ -732,6 +735,7 @@ elif page == "Collecting the Data":
             )
 
         st.markdown('''To reduce potential bias, I introduced a **public review contribution form**. This form mirrors the questions in my personal Google Form, ensuring consistency in data collection. I invite you to support this personal project by visiting the **'Contribute Reviews'** page and sharing your insights!''')
+
         # Add the Google Form image
         st.image("Review Log.png")
 
