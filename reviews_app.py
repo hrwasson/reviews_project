@@ -586,10 +586,15 @@ markdown = '''
     new places and growing my data science expertise!
 </div>
 '''
+st.sidebar.divider()
+st.sidebar.title("Find me on...")
+st.sidebar.link_button("LinkedIn", "https://www.linkedin.com/in/hannah-wasson/")
+st.sidebar.link_button("GitHub Pages", "https://hrwasson.github.io/")
+st.sidebar.divider()
 st.sidebar.title("About Me")
 st.sidebar.markdown(markdown, unsafe_allow_html=True)
-st.sidebar.link_button("Connect with me on LinkedIn", "https://www.linkedin.com/in/hannah-wasson/")
-st.sidebar.link_button("Visit my GitHub Page", "https://hrwasson.github.io/")
+
+
 
 # END SIDE BAR
 
@@ -1137,14 +1142,16 @@ elif page == "My Recommendations":
 # YOUR RECOMMENDATIONS PAGE🍕
 elif page == "Your Recommendations": 
     st.title("Eats & Adventures Tracker | Your Recommendations")
-    
-    read_file = conn.read(worksheet="Public Reviews")
-
-    df2 = clean_dataframe(read_file)
-    
-    df2['Number of Reviews'] = 1
 
     try: 
+    
+        read_file = conn.read(worksheet="Public Reviews")
+
+        df2 = clean_dataframe(read_file)
+        
+        df2['Number of Reviews'] = 1
+
+
     #TODO: data frame formatting
 
         st.markdown('''
