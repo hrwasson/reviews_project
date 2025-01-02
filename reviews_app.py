@@ -1033,6 +1033,8 @@ elif page == "Data at a Glance":
         df_group = df.groupby('Timestamp')['Count of Reviews'].sum().reset_index()
         df_group2 = df.groupby('Timestamp')['Rating'].median().reset_index()
         df_group['Median Rating'] = df_group2['Rating']
+        df_group.sort_values(by=['Timestamp'])
+        print(df_group)
 
         time_bar = px.bar(
             df_group, 
