@@ -36,7 +36,7 @@ nltk.download('punkt')
 # - ADD TEXT ON APP
 
 # SETTING UP THE PAGE FOR THE STREAMLIT APP
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_icon="☕", page_title="Eats & Adventures Tracker")
 
 # ACCESSING THE URL TO PULL IN MY RECOMMENDATIONS 🪪
 sheet_id = st.secrets["sheets"]["url"]
