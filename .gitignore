@@ -1,2 +1,4 @@
 secrets.toml
-form_submission.csv
+*.JPG
+*.jpg
+*.png
