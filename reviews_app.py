@@ -1142,7 +1142,7 @@ elif page == "My Recommendations":
         st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
 # YOUR RECOMMENDATIONS PAGE🍕
-elif page == "Your Recommendations": 
+elif page == "User Recommendations": 
     st.title("Eats & Adventures Tracker | Your Recommendations")
 
     try: 
