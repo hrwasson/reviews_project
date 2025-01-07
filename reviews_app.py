@@ -571,7 +571,7 @@ st.markdown('''
             ''', unsafe_allow_html=True)
 page = st.sidebar.selectbox(
     "Navigation",
-    ["Home", "Collecting the Data", "Contribute Reviews", "Data at a Glance", "My Recommendations", "Your Recommendations"], 
+    ["Home", "Collecting the Data", "Contribute Reviews", "Data at a Glance", "My Recommendations", "User Recommendations"], 
     index=0, 
     placeholder= "Where would you like to navigate to?"
 )
