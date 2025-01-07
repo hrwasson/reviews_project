@@ -1191,9 +1191,7 @@ elif page == "User Recommendations":
         df3['Overall Sentiment'] = df3['Overall Review'].apply(clean).apply(get_overall_sentiment)
         df3['size'] = df3['Rating'] * 10
 
-        public_len = len(df3)
-
-        print(df3)
+        public_len = len(df2)
 
         df2_map = px.scatter_mapbox(
                 df3,
