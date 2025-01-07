@@ -1193,6 +1193,8 @@ elif page == "Your Recommendations":
 
         public_len = len(df3)
 
+        print(df3)
+
         df2_map = px.scatter_mapbox(
                 df3,
                 lat='lat',
@@ -1215,7 +1217,7 @@ elif page == "Your Recommendations":
         st.plotly_chart(df2_map)
 
         recommendations(df=df3)
-
+        
 
     except: 
         st.write("Sorry, this page is not availiable at the moment. ☹️ ")
