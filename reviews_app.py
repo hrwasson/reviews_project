@@ -1203,7 +1203,7 @@ elif page == "User Recommendations":
                 color='Rating',  # Use the Rating column for color mapping
                 color_continuous_scale='Purpor',
                 mapbox_style='carto-positron',
-                title=f'Number of Publically Reviewed Locations: {public_len}',
+                title=f'Number of Public Reviews: {public_len}',
                 width=1000,
                 height=600,
                 zoom=3
