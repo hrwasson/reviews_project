@@ -37,7 +37,7 @@ nltk.download('punkt')
 
 # SETTING UP THE PAGE FOR THE STREAMLIT APP
 st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_icon="🍦", page_title="Eats & Adventures Tracker")
-
+st.cache_data.clear()
 # ACCESSING THE URL TO PULL IN MY RECOMMENDATIONS 🪪
 sheet_id = st.secrets["sheets"]["url"]
 df = pd.read_csv(f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv")
