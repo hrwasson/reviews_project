@@ -1028,8 +1028,6 @@ elif page == "Contribute Reviews":
     try: 
         st.subheader('Please fill out the form with your reviews:')
 
-        # csv_file = "form_submission.csv"
-
         reviews_form = st.form("your_reviews", clear_on_submit=True, enter_to_submit=False)
 
         with reviews_form:
@@ -1042,15 +1040,11 @@ elif page == "Contribute Reviews":
                                     
                                     placeholder="e.g., 123 Main Street, City, State, ZIP")
             
-            # lat_lon_input = st.text_input('What is the latitude and longitude of the location?',
-            #                         placeholder="Please input the latitude and longitude...")
-            
             category  = st.selectbox(
                 "What category does this location fall in?",
-                ("Coffee Shop", "Restaurant", "Bar", "Dessert", 
-                "Fast Food", "Diner", "Bakery", "Park", "Museum", 
-                "Outdoor Activity", "Indoor Activity", "Uber Eats", 
-                "Door Dash", "Brewery"),
+                ("Bakery", "Bar", "Brewery", "Coffee Shop", "Dessert", "Diner", "Door Dash", 
+                "Fast Food", "Indoor Activity", "Museum", "Outdoor Activity", "Park", 
+                "Restaurant", "Uber Eats"),
                 index=None,
                 placeholder="Select a category...",
             )
@@ -1102,12 +1096,6 @@ elif page == "Contribute Reviews":
                 index=None, 
                 placeholder="Please select your rating of unique aspects..."
             )
-
-            # positive_review = st.text_area('Please give a positive review about the location:',
-            #                             placeholder='Please fill in your positive review...')
-            
-            # negative_review = st.text_area("Please give a negative review about the location:",
-            #                             placeholder="Please fill in your negative review...")
 
             would_go_back = st.selectbox(
                 "Would you go back?",
@@ -1162,7 +1150,6 @@ elif page == "Contribute Reviews":
                 "Timestamp" : [time], 
                 "Name" : [name],
                 "Location": [address],
-                # "Lat/Lon": [lat_lon_input],
                 "Category": [category],
                 "Season Visited": [season], 
                 "What I got/did" : [order],
@@ -1172,8 +1159,6 @@ elif page == "Contribute Reviews":
                 "Food quality": [f],
                 "Service":[s],
                 "Unique Aspects": [u], 
-                #"Positive Review": [positive_review], 
-                #"Negative Review": [negative_review],
                 "Would go back?": [would_go_back], 
                 "Parking": [parking_ease],
                 "WiFi": [wifi_select], 
@@ -1185,7 +1170,7 @@ elif page == "Contribute Reviews":
             updated_reviews = pd.concat([pdf, new_data], ignore_index=True)
 
             conn.update(worksheet="Public Reviews", data = updated_reviews)
-            
+
             try:
                 st.success(f"Thank you for contributing to this project! Your review was submitted on {time}.", icon="✅")
             except:
@@ -1247,7 +1232,7 @@ elif page == "Data at a Glance":
         if selected_state or selected_city or selected_category:
 
             filtered_df = df
-
+ 
             if selected_state: filtered_df = filtered_df[(filtered_df['State'].isin(selected_state))]
             if selected_city: filtered_df = filtered_df[(filtered_df['City'].isin(selected_city))]
             if selected_category: filtered_df = filtered_df[(filtered_df['Category'].isin(selected_category))]
@@ -1284,7 +1269,7 @@ elif page == "Data at a Glance":
                 lon='lon',
                 size='size',
                 hover_name='Name',
-                color='Rating',  # Use the Rating column for color mapping
+                color='Rating',  
                 color_continuous_scale='Purpor',
                 mapbox_style='carto-positron',
                 title= f'Count of Reviewed Locations: {full_count}',
@@ -1309,8 +1294,9 @@ elif page == "Data at a Glance":
         df_group = df.groupby('Timestamp')['Count of Reviews'].sum().reset_index()
         df_group2 = df.groupby('Timestamp')['Rating'].median().reset_index()
         df_group['Median Rating'] = df_group2['Rating']
-        df_group.sort_values(by=['Timestamp'])
-        print(df_group)
+        df_group['Timestamp'] = pd.to_datetime(df_group['Timestamp'])
+        df_group.sort_values(by=['Timestamp'], inplace=True)
+        df_group.reset_index(drop=True, inplace=True)
 
         time_bar = px.bar(
             df_group, 
