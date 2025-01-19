@@ -1185,8 +1185,11 @@ elif page == "Contribute Reviews":
             updated_reviews = pd.concat([pdf, new_data], ignore_index=True)
 
             conn.update(worksheet="Public Reviews", data = updated_reviews)
-
-            st.success(f"Thank you for contributing to this project! Your review was submitted on {time}", icon="✅")
+            
+            try:
+                st.success(f"Thank you for contributing to this project! Your review was submitted on {time}.", icon="✅")
+            except:
+                st.error("Sorry, an error has occured ☹️")
     except: 
         st.write("Sorry, this page is not availiable at the moment. ☹️ ")
 
