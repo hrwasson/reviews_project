@@ -564,8 +564,6 @@ def recommendations_public(df):
             
             st.markdown(text_content)
 
-            st.divider()
-
             # st.markdown('''
             #     The word cloud below highlights the most frequently mentioned words in the positive reviews, with larger and bolder words representing higher frequencies.
             # '''
@@ -1284,48 +1282,46 @@ elif page == "Data at a Glance":
 
         # Reviews Over Time
 
-        st.header("Reviews Over Time")
+        # st.header("Reviews Over Time")
 
-        st.markdown(
-            '''
-            The bar chart below illustrates the number of reviews over time, with the color of each bar reflecting the median rating of reviews for that specific day.            '''
-        )
+        # st.markdown(
+        #     '''
+        #     The bar chart below illustrates the number of reviews over time, with the color of each bar reflecting the median rating of reviews for that specific day.            '''
+        # )
 
-        df_group = df.groupby('Timestamp')['Count of Reviews'].sum().reset_index()
-        df_group2 = df.groupby('Timestamp')['Rating'].median().reset_index()
-        df_group['Median Rating'] = df_group2['Rating']
-        df_group['Timestamp'] = pd.to_datetime(df_group['Timestamp'])
-        df_group.sort_values(by=['Timestamp'], inplace=True)
-        df_group.reset_index(drop=True, inplace=True)
+        # df_group = df.groupby('Timestamp')['Count of Reviews'].sum().reset_index()
+        # df_group2 = df.groupby('Timestamp')['Rating'].median().reset_index()
+        # df_group['Median Rating'] = df_group2['Rating']
+        # df_group['Timestamp'] = pd.to_datetime(df_group['Timestamp'])
 
-        time_bar = px.bar(
-            df_group, 
-            x = 'Timestamp',
-            y = 'Count of Reviews', 
-            color = 'Median Rating', 
-            color_continuous_scale= 'Purpor', 
-            width=1000, 
-            height = 300, 
-            hover_name='Count of Reviews'
-        )  
+        # time_bar = px.bar(
+        #     df_group, 
+        #     x = 'Timestamp',
+        #     y = 'Count of Reviews', 
+        #     color = 'Median Rating', 
+        #     color_continuous_scale= 'Purpor', 
+        #     width=1000, 
+        #     height = 300, 
+        #     hover_name='Count of Reviews'
+        # )  
 
-        time_bar.update_traces(
-        hovertemplate="<b>%{hovertext}</b>"  
-        )
+        # time_bar.update_traces(
+        # hovertemplate="<b>%{hovertext}</b>"  
+        # )
 
-        time_bar.update_layout(
-        title="Count of Reviews Over Time",
-        xaxis_title="Date",
-        yaxis_title="Count of Reviews"
-        )
+        # time_bar.update_layout(
+        # title="Count of Reviews Over Time",
+        # xaxis_title="Date",
+        # yaxis_title="Count of Reviews"
+        # )
 
-        st.plotly_chart(time_bar)
+        # st.plotly_chart(time_bar)
 
-        st.markdown(
-            """
-            **Note:** You may notice a high count of reviews in the begining of the bar chart around 11/11 and 11/12. After collecting using a notesheet over the summer, I transitioned into a more uniformed process starting in Novemember, hence the large spike in the bar plot. 
-            """
-        )
+        # st.markdown(
+        #     """
+        #     **Note:** You may notice a high count of reviews in the begining of the bar chart around 11/11 and 11/12. After collecting using a notesheet over the summer, I transitioned into a more uniformed process starting in Novemember, hence the large spike in the bar plot. 
+        #     """
+        # )
 
         st.divider()
 
