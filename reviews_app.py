@@ -95,7 +95,7 @@ def get_overall_sentiment(review):
         sentiment_overall = sentiment.describe(review)
         return sentiment_overall
     
-def word_cloud(data, output_path = "images/word_cloud.png"): 
+def word_cloud(data, output_path = "word_cloud.png"): 
 
     sentiment_pipeline = pipeline("sentiment-analysis")
     review = data['Positive Review'].to_list()
@@ -115,7 +115,7 @@ def word_cloud(data, output_path = "images/word_cloud.png"):
     plt.savefig(output_path, dpi=150, bbox_inches="tight")
     return output_path
 
-def word_cloud_other(data, output_path = "images/word_cloud.png"): 
+def word_cloud_other(data, output_path = "word_cloud_other.png"): 
 
     sentiment_pipeline = pipeline("sentiment-analysis")
     review = data['Positive Review'].to_list()
@@ -828,7 +828,7 @@ df['Overall Sentiment'] = df['Overall Review'].apply(clean).apply(get_overall_se
 # BEGIN STREAMLIT APP DEV 
 
 # BEGIN SIDE BAR
-logo = "images/hannah.jpg"
+logo = "hannah.jpg"
 st.sidebar.image(logo)
 st.markdown('''
             <div style="background-color:white; color:black">
@@ -1006,7 +1006,7 @@ elif page == "Collecting the Data":
         st.markdown('''To reduce potential bias, I introduced a **public review contribution form**. This form mirrors the questions in my personal Google Form, ensuring consistency in data collection. I invite you to support this personal project by visiting the **'Contribute Reviews'** page and sharing your insights!''')
 
         # Add the Google Form image
-        st.image("images/datacollection.png")
+        st.image("datacollection.png")
 
 
     except: 
