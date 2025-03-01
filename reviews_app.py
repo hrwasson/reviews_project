@@ -864,7 +864,7 @@ st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
 # HOME PAGE 🏠
 if page == "Home":
-    st.title("Eats & Adventures Tracker | Home")
+    st.title("Eats & Adventures Tracker Test | Home")
 
     try: 
         sum_reviews = df['Count of Reviews'].sum()
@@ -877,7 +877,7 @@ if page == "Home":
 
         with col1: 
 
-            rtp_map = df[df['City'].isin(['Cary', 'Raleigh', 'Durham', 'Morrisville'])]
+            rtp_map = df[df['City'].isin(['Cary', 'Raleigh', 'Durham', 'Morrisville', 'Chapel Hill'])]
             count_rtp = len(rtp_map)
             reccomendation_map = px.scatter_mapbox(
                             rtp_map,
