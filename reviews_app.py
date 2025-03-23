@@ -864,7 +864,7 @@ st.sidebar.markdown(markdown, unsafe_allow_html=True)
 
 # HOME PAGE 🏠
 if page == "Home":
-    st.title("Eats & Adventures Tracker Test | Home")
+    st.title("Eats & Adventures Tracker | Home")
 
     try: 
         sum_reviews = df['Count of Reviews'].sum()
